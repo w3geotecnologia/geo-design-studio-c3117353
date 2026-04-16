@@ -1,28 +1,28 @@
 import { useState } from "react";
 import { Search, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import logo from "@/assets/logo.png";
 
 const navLinks = [
-  { label: "Início", href: "#" },
-  { label: "Serviços", href: "#servicos" },
-  { label: "Produtos", href: "#produtos" },
-  { label: "Contato", href: "#contato" },
-  { label: "Sobre", href: "#sobre" },
+  { label: "Início", href: "/" },
+  { label: "Serviços", href: "/#servicos" },
+  { label: "Produtos", href: "/#produtos" },
+  { label: "Contato", href: "/#contato" },
+  { label: "Sobre", href: "/#sobre" },
 ];
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
-      {/* Main nav */}
       <header className="bg-background shadow-sm sticky top-0 z-50">
-        <div className="container flex items-center justify-between py-3">
+        <div className="container flex items-center justify-between py-2">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
-            <span className="text-primary font-heading font-extrabold text-2xl tracking-tight">
-              W3<span className="text-foreground text-base font-semibold ml-0.5">GEO-TECNOLOGIAS</span>
-            </span>
+          <a href="/" className="flex items-center">
+            <img src={logo} alt="W3 Geo-Tecnologias" className="h-14 md:h-16 w-auto" />
           </a>
 
           {/* Search */}
@@ -37,14 +37,14 @@ const Navbar = () => {
 
           {/* Right side */}
           <div className="hidden md:flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm cursor-pointer" onClick={() => navigate("/cadastro")}>
               <User className="w-5 h-5 text-muted-foreground" />
               <div>
                 <p className="font-semibold text-foreground leading-tight">Seja Bem Vindo</p>
-                <p className="text-muted-foreground text-xs">alterar cadastro</p>
+                <p className="text-primary text-xs hover:underline">alterar cadastro</p>
               </div>
             </div>
-            <Button className="bg-primary hover:bg-primary-dark text-primary-foreground font-semibold px-6">
+            <Button onClick={() => navigate("/orcamento")} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6">
               Orçamento
             </Button>
           </div>
@@ -78,7 +78,8 @@ const Navbar = () => {
                 {link.label}
               </a>
             ))}
-            <Button className="w-full bg-primary text-primary-foreground font-semibold">Orçamento</Button>
+            <Button className="w-full" onClick={() => { navigate("/cadastro"); setMobileOpen(false); }}>Cadastro</Button>
+            <Button className="w-full bg-primary text-primary-foreground font-semibold" onClick={() => { navigate("/orcamento"); setMobileOpen(false); }}>Orçamento</Button>
           </div>
         )}
       </header>
