@@ -38,7 +38,7 @@ const Orcamento = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col" style={{ background: 'hsl(210 20% 88%)' }}>
       <TopBar />
       <Navbar />
       <main className="flex-1 container py-12">
