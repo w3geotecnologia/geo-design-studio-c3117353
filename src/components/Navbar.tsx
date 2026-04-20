@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, User, Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
@@ -15,6 +16,20 @@ const navLinks = [
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
+  const { isAdmin, signOut } = useAdminAuth();
+
+  const handleAdminLink = () => {
+    navigate(isAdmin ? "/dashboard" : "/cadastro");
+  };
+
+  const handleExit = async () => {
+    if (isAdmin) {
+      await signOut();
+      navigate("/");
+      return;
+    }
+    window.close();
+  };
 
   return (
     <>
@@ -39,13 +54,13 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-4">
             <div className="flex items-center gap-2 text-sm">
               <User className="w-5 h-5 text-muted-foreground" />
-              <div className="cursor-pointer" onClick={() => navigate("/cadastro")}>
+              <div className="cursor-pointer" onClick={handleAdminLink}>
                 <p className="font-semibold text-foreground leading-tight">Seja Bem Vindo</p>
-                <p className="text-primary text-xs hover:underline">Cadastro</p>
+                <p className="text-primary text-xs hover:underline">{isAdmin ? "Alterações" : "Cadastro"}</p>
               </div>
               <button
                 type="button"
-                onClick={() => { window.close(); }}
+                onClick={handleExit}
                 aria-label="Sair"
                 title="Sair"
                 className="ml-1 p-1.5 rounded-md hover:bg-secondary transition-colors"
@@ -87,7 +102,7 @@ const Navbar = () => {
                 {link.label}
               </a>
             ))}
-            <Button className="w-full" onClick={() => { navigate("/cadastro"); setMobileOpen(false); }}>Cadastro</Button>
+            <Button className="w-full" onClick={() => { navigate(isAdmin ? "/dashboard" : "/cadastro"); setMobileOpen(false); }}>{isAdmin ? "Alterações" : "Cadastro"}</Button>
             <Button className="w-full bg-primary text-primary-foreground font-semibold" onClick={() => { navigate("/orcamento"); setMobileOpen(false); }}>Orçamento</Button>
           </div>
         )}
