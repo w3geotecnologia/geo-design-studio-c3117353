@@ -8,6 +8,7 @@ import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 const servicosOptions = [
   "Assistência Técnica",
@@ -19,6 +20,7 @@ const servicosOptions = [
 
 const Orcamento = () => {
   const navigate = useNavigate();
+  const [isSaving, setIsSaving] = useState(false);
   const [form, setForm] = useState({
     nome: "", empresa: "", telefone: "", email: "", servico: "", produto: "", descricao: "",
   });
@@ -27,14 +29,32 @@ const Orcamento = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const saveOrcamento = async (action: "cadastrar" | "alterar") => {
     if (!form.nome || !form.telefone) {
-      toast({ title: "Preencha os campos obrigatórios", variant: "destructive" });
+      toast({ title: action === "cadastrar" ? "Preencha os campos obrigatórios" : "Preencha os campos obrigatórios para alterar", variant: "destructive" });
       return;
     }
-    toast({ title: "Solicitação de orçamento enviada com sucesso!" });
+
+    setIsSaving(true);
+    const request = action === "cadastrar"
+      ? supabase.from("orcamentos").insert(form)
+      : supabase.from("orcamentos").update(form).eq("nome", form.nome).eq("telefone", form.telefone);
+
+    const { error } = await request;
+    setIsSaving(false);
+
+    if (error) {
+      toast({ title: "Erro ao salvar orçamento", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    toast({ title: action === "cadastrar" ? "Solicitação de orçamento enviada com sucesso!" : "Orçamento alterado com sucesso!" });
     navigate("/");
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    saveOrcamento("cadastrar");
   };
 
   return (
@@ -85,18 +105,12 @@ const Orcamento = () => {
               <Textarea name="descricao" value={form.descricao} onChange={handleChange} placeholder="Descreva o que você precisa..." rows={4} />
             </div>
             <div className="md:col-span-2 flex flex-col sm:flex-row gap-4 mt-4">
-              <Button type="submit" className="flex-1 bg-primary text-primary-foreground font-semibold">Cadastrar Orçamento</Button>
+              <Button type="submit" disabled={isSaving} className="flex-1 bg-primary text-primary-foreground font-semibold">Cadastrar Orçamento</Button>
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => {
-                  if (!form.nome || !form.telefone) {
-                    toast({ title: "Preencha os campos obrigatórios para alterar", variant: "destructive" });
-                    return;
-                  }
-                  toast({ title: "Orçamento alterado com sucesso!" });
-                  navigate("/");
-                }}
+                disabled={isSaving}
+                onClick={() => saveOrcamento("alterar")}
                 className="flex-1 font-semibold"
               >
                 Alterar Orçamento

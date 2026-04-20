@@ -7,9 +7,11 @@ import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 const Cadastro = () => {
   const navigate = useNavigate();
+  const [isSaving, setIsSaving] = useState(false);
   const [form, setForm] = useState({
     nome: "", endereco: "", numero: "", cep: "", bairro: "", cidade: "", estado: "", documento: "", telefone: "", email: "",
   });
@@ -18,14 +20,32 @@ const Cadastro = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const saveCadastro = async (action: "cadastrar" | "alterar") => {
     if (!form.nome || !form.documento || !form.telefone) {
-      toast({ title: "Preencha os campos obrigatórios", variant: "destructive" });
+      toast({ title: action === "cadastrar" ? "Preencha os campos obrigatórios" : "Preencha os campos obrigatórios para alterar", variant: "destructive" });
       return;
     }
-    toast({ title: "Cadastro realizado com sucesso!" });
+
+    setIsSaving(true);
+    const request = action === "cadastrar"
+      ? supabase.from("cadastro_clientes").insert(form)
+      : supabase.from("cadastro_clientes").update(form).eq("documento", form.documento);
+
+    const { error } = await request;
+    setIsSaving(false);
+
+    if (error) {
+      toast({ title: "Erro ao salvar cadastro", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    toast({ title: action === "cadastrar" ? "Cadastro realizado com sucesso!" : "Cadastro alterado com sucesso!" });
     navigate("/");
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    saveCadastro("cadastrar");
   };
 
   return (
@@ -77,18 +97,12 @@ const Cadastro = () => {
               <Input name="email" type="email" value={form.email} onChange={handleChange} placeholder="seu@email.com" />
             </div>
             <div className="md:col-span-2 flex flex-col sm:flex-row gap-4 mt-4">
-              <Button type="submit" name="acao" value="cadastrar" className="flex-1 bg-primary text-primary-foreground font-semibold">Cadastrar</Button>
+              <Button type="submit" name="acao" value="cadastrar" disabled={isSaving} className="flex-1 bg-primary text-primary-foreground font-semibold">Cadastrar</Button>
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => {
-                  if (!form.nome || !form.documento || !form.telefone) {
-                    toast({ title: "Preencha os campos obrigatórios para alterar", variant: "destructive" });
-                    return;
-                  }
-                  toast({ title: "Cadastro alterado com sucesso!" });
-                  navigate("/");
-                }}
+                disabled={isSaving}
+                onClick={() => saveCadastro("alterar")}
                 className="flex-1 font-semibold"
               >
                 Alterar
