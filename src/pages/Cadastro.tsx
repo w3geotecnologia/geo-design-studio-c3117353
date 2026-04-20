@@ -12,6 +12,7 @@ import { supabase } from "@/lib/supabase";
 const Cadastro = () => {
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
+  const [cadastroId, setCadastroId] = useState<string | null>(null);
   const [form, setForm] = useState({
     nome: "", endereco: "", numero: "", cep: "", bairro: "", cidade: "", estado: "", documento: "", telefone: "", email: "",
   });
@@ -20,7 +21,52 @@ const Cadastro = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const buscarCadastro = async () => {
+    if (!form.documento) {
+      toast({ title: "Informe o CPF ou CNPJ para buscar o cadastro", variant: "destructive" });
+      return;
+    }
+
+    setIsSaving(true);
+    const { data, error } = await supabase
+      .from("cadastro_clientes")
+      .select("id,nome,endereco,numero,cep,bairro,cidade,estado,documento,telefone,email")
+      .eq("documento", form.documento)
+      .maybeSingle();
+    setIsSaving(false);
+
+    if (error) {
+      toast({ title: "Erro ao buscar cadastro", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    if (!data) {
+      toast({ title: "Cadastro não encontrado", description: "Verifique o CPF ou CNPJ informado.", variant: "destructive" });
+      return;
+    }
+
+    setCadastroId(data.id);
+    setForm({
+      nome: data.nome ?? "",
+      endereco: data.endereco ?? "",
+      numero: data.numero ?? "",
+      cep: data.cep ?? "",
+      bairro: data.bairro ?? "",
+      cidade: data.cidade ?? "",
+      estado: data.estado ?? "",
+      documento: data.documento ?? "",
+      telefone: data.telefone ?? "",
+      email: data.email ?? "",
+    });
+    toast({ title: "Cadastro carregado para alteração" });
+  };
+
   const saveCadastro = async (action: "cadastrar" | "alterar") => {
+    if (action === "alterar" && !cadastroId) {
+      await buscarCadastro();
+      return;
+    }
+
     if (!form.nome || !form.documento || !form.telefone) {
       toast({ title: action === "cadastrar" ? "Preencha os campos obrigatórios" : "Preencha os campos obrigatórios para alterar", variant: "destructive" });
       return;
@@ -29,7 +75,7 @@ const Cadastro = () => {
     setIsSaving(true);
     const request = action === "cadastrar"
       ? supabase.from("cadastro_clientes").insert(form)
-      : supabase.from("cadastro_clientes").update(form).eq("documento", form.documento);
+      : supabase.from("cadastro_clientes").update(form).eq("id", cadastroId);
 
     const { error } = await request;
     setIsSaving(false);
@@ -105,7 +151,7 @@ const Cadastro = () => {
                 onClick={() => saveCadastro("alterar")}
                 className="flex-1 font-semibold"
               >
-                Alterar
+                {cadastroId ? "Salvar Alteração" : "Buscar para Alterar"}
               </Button>
             </div>
             <div className="md:col-span-2 text-center mt-2">
