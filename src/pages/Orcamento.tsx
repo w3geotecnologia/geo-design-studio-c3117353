@@ -21,6 +21,7 @@ const servicosOptions = [
 const Orcamento = () => {
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
+  const [orcamentoId, setOrcamentoId] = useState<string | null>(null);
   const [form, setForm] = useState({
     nome: "", empresa: "", telefone: "", email: "", servico: "", produto: "", descricao: "",
   });
@@ -29,7 +30,52 @@ const Orcamento = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const buscarOrcamento = async () => {
+    if (!form.nome || !form.telefone) {
+      toast({ title: "Informe nome e telefone para buscar o orçamento", variant: "destructive" });
+      return;
+    }
+
+    setIsSaving(true);
+    const { data, error } = await supabase
+      .from("orcamentos")
+      .select("id,nome,empresa,telefone,email,servico,produto,descricao")
+      .eq("nome", form.nome)
+      .eq("telefone", form.telefone)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    setIsSaving(false);
+
+    if (error) {
+      toast({ title: "Erro ao buscar orçamento", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    if (!data) {
+      toast({ title: "Orçamento não encontrado", description: "Verifique nome e telefone informados.", variant: "destructive" });
+      return;
+    }
+
+    setOrcamentoId(data.id);
+    setForm({
+      nome: data.nome ?? "",
+      empresa: data.empresa ?? "",
+      telefone: data.telefone ?? "",
+      email: data.email ?? "",
+      servico: data.servico ?? "",
+      produto: data.produto ?? "",
+      descricao: data.descricao ?? "",
+    });
+    toast({ title: "Orçamento carregado para alteração" });
+  };
+
   const saveOrcamento = async (action: "cadastrar" | "alterar") => {
+    if (action === "alterar" && !orcamentoId) {
+      await buscarOrcamento();
+      return;
+    }
+
     if (!form.nome || !form.telefone) {
       toast({ title: action === "cadastrar" ? "Preencha os campos obrigatórios" : "Preencha os campos obrigatórios para alterar", variant: "destructive" });
       return;
@@ -38,7 +84,7 @@ const Orcamento = () => {
     setIsSaving(true);
     const request = action === "cadastrar"
       ? supabase.from("orcamentos").insert(form)
-      : supabase.from("orcamentos").update(form).eq("nome", form.nome).eq("telefone", form.telefone);
+      : supabase.from("orcamentos").update(form).eq("id", orcamentoId);
 
     const { error } = await request;
     setIsSaving(false);
@@ -113,7 +159,7 @@ const Orcamento = () => {
                 onClick={() => saveOrcamento("alterar")}
                 className="flex-1 font-semibold"
               >
-                Alterar Orçamento
+                {orcamentoId ? "Salvar Alteração" : "Buscar para Alterar"}
               </Button>
             </div>
             <div className="md:col-span-2 text-center mt-2">
