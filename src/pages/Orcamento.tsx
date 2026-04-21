@@ -21,7 +21,6 @@ const servicosOptions = [
 const Orcamento = () => {
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
-  const [orcamentoId, setOrcamentoId] = useState<string | null>(null);
   const [form, setForm] = useState({
     nome: "", empresa: "", telefone: "", email: "", servico: "", produto: "", descricao: "",
   });
@@ -30,63 +29,16 @@ const Orcamento = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const buscarOrcamento = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     if (!form.nome || !form.telefone) {
-      toast({ title: "Informe nome e telefone para buscar o orçamento", variant: "destructive" });
+      toast({ title: "Preencha os campos obrigatórios", variant: "destructive" });
       return;
     }
 
     setIsSaving(true);
-    const { data, error } = await supabase
-      .from("orcamentos")
-      .select("id,nome,empresa,telefone,email,servico,produto,descricao")
-      .eq("nome", form.nome)
-      .eq("telefone", form.telefone)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    setIsSaving(false);
-
-    if (error) {
-      toast({ title: "Erro ao buscar orçamento", description: error.message, variant: "destructive" });
-      return;
-    }
-
-    if (!data) {
-      toast({ title: "Orçamento não encontrado", description: "Verifique nome e telefone informados.", variant: "destructive" });
-      return;
-    }
-
-    setOrcamentoId(data.id);
-    setForm({
-      nome: data.nome ?? "",
-      empresa: data.empresa ?? "",
-      telefone: data.telefone ?? "",
-      email: data.email ?? "",
-      servico: data.servico ?? "",
-      produto: data.produto ?? "",
-      descricao: data.descricao ?? "",
-    });
-    toast({ title: "Orçamento carregado para alteração" });
-  };
-
-  const saveOrcamento = async (action: "cadastrar" | "alterar") => {
-    if (action === "alterar" && !orcamentoId) {
-      await buscarOrcamento();
-      return;
-    }
-
-    if (!form.nome || !form.telefone) {
-      toast({ title: action === "cadastrar" ? "Preencha os campos obrigatórios" : "Preencha os campos obrigatórios para alterar", variant: "destructive" });
-      return;
-    }
-
-    setIsSaving(true);
-    const request = action === "cadastrar"
-      ? supabase.from("orcamentos").insert(form)
-      : supabase.from("orcamentos").update(form).eq("id", orcamentoId);
-
-    const { error } = await request;
+    const { error } = await supabase.from("orcamentos").insert(form);
     setIsSaving(false);
 
     if (error) {
@@ -94,13 +46,8 @@ const Orcamento = () => {
       return;
     }
 
-    toast({ title: action === "cadastrar" ? "Solicitação de orçamento enviada com sucesso!" : "Orçamento alterado com sucesso!" });
+    toast({ title: "Solicitação de orçamento enviada com sucesso!" });
     navigate("/");
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    saveOrcamento("cadastrar");
   };
 
   return (
@@ -150,16 +97,9 @@ const Orcamento = () => {
               <Label htmlFor="descricao">Descrição do Serviço / Observações</Label>
               <Textarea name="descricao" value={form.descricao} onChange={handleChange} placeholder="Descreva o que você precisa..." rows={4} />
             </div>
-            <div className="md:col-span-2 flex flex-col sm:flex-row gap-4 mt-4">
-              <Button type="submit" disabled={isSaving} className="flex-1 bg-primary text-primary-foreground font-semibold">Cadastrar Orçamento</Button>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={isSaving}
-                onClick={() => saveOrcamento("alterar")}
-                className="flex-1 font-semibold"
-              >
-                {orcamentoId ? "Salvar Alteração" : "Buscar para Alterar"}
+            <div className="md:col-span-2 mt-4">
+              <Button type="submit" disabled={isSaving} className="w-full bg-primary text-primary-foreground font-semibold">
+                {isSaving ? "Enviando..." : "Solicitar Orçamento"}
               </Button>
             </div>
             <div className="md:col-span-2 text-center mt-2">
