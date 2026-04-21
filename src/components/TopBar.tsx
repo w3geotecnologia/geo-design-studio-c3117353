@@ -13,8 +13,8 @@ const TopBar = () => (
           <FaWhatsapp className="w-4 h-4 text-green-400" />
           <span>+55 19 98977-6474</span>
         </a>
-        <a href="mailto:contato@w3geo.com.br" className="hidden sm:flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <span>contato@w3geo.com.br</span>
+        <a href="mailto:w3.assistencia@gmail.com" className="hidden sm:flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <span>w3.assistencia@gmail.com</span>
         </a>
       </div>
       <div className="flex items-center gap-2">
