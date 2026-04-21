@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -112,6 +113,25 @@ const AdminOrcamentos = () => {
     await loadOrcamentos();
   };
 
+  const handleDelete = async (orcamento: Orcamento, event: React.MouseEvent) => {
+    event.stopPropagation();
+    if (!window.confirm(`Remover o orçamento de "${orcamento.nome ?? "sem nome"}"?`)) return;
+
+    const { error } = await supabase.from("orcamentos").delete().eq("id", orcamento.id);
+
+    if (error) {
+      toast({ title: "Erro ao remover orçamento", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    toast({ title: "Orçamento removido com sucesso" });
+    if (selectedId === orcamento.id) {
+      setSelectedId(null);
+      setForm(emptyForm);
+    }
+    await loadOrcamentos();
+  };
+
   return (
     <AdminLayout title="Orçamentos">
       <form onSubmit={handleSubmit} className="mb-6 rounded-lg border border-border bg-card p-6 shadow-sm">
@@ -173,6 +193,7 @@ const AdminOrcamentos = () => {
               <TableHead>Empresa</TableHead>
               <TableHead>Telefone</TableHead>
               <TableHead>Serviço</TableHead>
+              <TableHead className="w-16 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -182,6 +203,18 @@ const AdminOrcamentos = () => {
                 <TableCell>{o.empresa}</TableCell>
                 <TableCell>{o.telefone}</TableCell>
                 <TableCell>{o.servico}</TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={(event) => handleDelete(o, event)}
+                    aria-label={`Remover orçamento de ${o.nome ?? "cliente"}`}
+                    className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
