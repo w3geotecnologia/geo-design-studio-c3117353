@@ -18,8 +18,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { isAdmin, signOut } = useAdminAuth();
 
-  const handleAdminLink = () => {
-    navigate(isAdmin ? "/dashboard" : "/cadastro");
+  const handleUserIconClick = () => {
+    navigate(isAdmin ? "/dashboard" : "/admin");
   };
 
   const handleExit = async () => {
@@ -51,12 +51,26 @@ const Navbar = () => {
           </div>
 
           {/* Right side */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 ml-auto">
             <div className="flex items-center gap-2 text-sm">
-              <User className="w-5 h-5 text-muted-foreground" />
-              <div className="cursor-pointer" onClick={handleAdminLink}>
-                <p className="font-semibold text-foreground leading-tight">Seja Bem Vindo</p>
-                <p className="text-primary text-xs hover:underline">{isAdmin ? "Alterações" : "Cadastro"}</p>
+              <button
+                type="button"
+                onClick={handleUserIconClick}
+                aria-label={isAdmin ? "Abrir Dashboard" : "Entrar como administrador"}
+                title={isAdmin ? "Abrir Dashboard" : "Entrar como administrador"}
+                className="p-1.5 rounded-md hover:bg-secondary transition-colors"
+              >
+                <User className="w-5 h-5 text-muted-foreground" />
+              </button>
+              <div className="leading-tight">
+                <p className="font-semibold text-foreground">Seja Bem Vindo</p>
+                <button
+                  type="button"
+                  onClick={() => navigate(isAdmin ? "/dashboard" : "/cadastro")}
+                  className="text-primary text-xs hover:underline"
+                >
+                  {isAdmin ? "Alterações" : "Cadastro"}
+                </button>
               </div>
               <button
                 type="button"
