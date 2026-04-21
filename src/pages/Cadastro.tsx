@@ -20,13 +20,30 @@ const Cadastro = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const cep = e.target.value.replace(/\D/g, "");
+    if (cep.length !== 8) return;
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await res.json();
+      if (data.erro) {
+        toast({ title: "CEP não encontrado", variant: "destructive" });
+        return;
+      }
+      setForm((current) => ({
+        ...current,
+        endereco: data.logradouro || current.endereco,
+        bairro: data.bairro || current.bairro,
+        cidade: data.localidade || current.cidade,
+        estado: data.uf || current.estado,
+      }));
+    } catch {
+      toast({ title: "Erro ao buscar CEP", variant: "destructive" });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!form.nome || !form.documento || !form.telefone) {
-      toast({ title: "Preencha os campos obrigatórios", variant: "destructive" });
-      return;
-    }
 
     setIsSaving(true);
     const { error } = await supabase.from("cadastro_clientes").insert(form);
@@ -50,16 +67,16 @@ const Cadastro = () => {
           <h1 className="text-2xl font-heading font-bold text-foreground mb-6">Cadastro de Cliente</h1>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <Label htmlFor="nome">Nome Completo *</Label>
-              <Input name="nome" value={form.nome} onChange={handleChange} placeholder="Seu nome completo" required />
+              <Label htmlFor="nome">Nome Completo</Label>
+              <Input name="nome" value={form.nome} onChange={handleChange} placeholder="Seu nome completo" />
             </div>
             <div className="md:col-span-2">
-              <Label htmlFor="documento">CPF ou CNPJ *</Label>
-              <Input name="documento" value={form.documento} onChange={handleChange} placeholder="000.000.000-00 ou 00.000.000/0000-00" required />
+              <Label htmlFor="documento">CPF ou CNPJ</Label>
+              <Input name="documento" value={form.documento} onChange={handleChange} placeholder="000.000.000-00 ou 00.000.000/0000-00" />
             </div>
             <div>
               <Label htmlFor="cep">CEP</Label>
-              <Input name="cep" value={form.cep} onChange={handleChange} placeholder="00000-000" />
+              <Input name="cep" value={form.cep} onChange={handleChange} onBlur={handleCepBlur} placeholder="00000-000" />
             </div>
             <div>
               <Label htmlFor="endereco">Endereço</Label>
@@ -82,8 +99,8 @@ const Cadastro = () => {
               <Input name="estado" value={form.estado} onChange={handleChange} placeholder="SP" />
             </div>
             <div>
-              <Label htmlFor="telefone">Telefone *</Label>
-              <Input name="telefone" value={form.telefone} onChange={handleChange} placeholder="(19) 99999-9999" required />
+              <Label htmlFor="telefone">Telefone</Label>
+              <Input name="telefone" value={form.telefone} onChange={handleChange} placeholder="(19) 99999-9999" />
             </div>
             <div>
               <Label htmlFor="email">E-mail</Label>
