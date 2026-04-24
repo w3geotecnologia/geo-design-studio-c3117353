@@ -105,6 +105,29 @@ const AdminProdutos = () => {
     setForm((current) => ({ ...current, [target.name]: value }));
   };
 
+  const handleImageFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Arquivo inválido", description: "Selecione uma imagem.", variant: "destructive" });
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "Imagem muito grande", description: "Tamanho máximo: 2MB.", variant: "destructive" });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setForm((current) => ({ ...current, imagem_url: String(reader.result ?? "") }));
+      toast({ title: "Imagem carregada" });
+    };
+    reader.onerror = () => toast({ title: "Erro ao ler imagem", variant: "destructive" });
+    reader.readAsDataURL(file);
+    event.target.value = "";
+  };
+
+  const clearImage = () => setForm((current) => ({ ...current, imagem_url: "" }));
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!form.nome.trim()) {
