@@ -134,50 +134,68 @@ const AdminClientes = () => {
   return (
     <AdminLayout title="Cadastro Clientes">
       <form onSubmit={handleSubmit} className="mb-6 rounded-lg border border-border bg-card p-6 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="font-heading text-lg font-bold">
+            {selectedId ? "Alterar dados do cliente" : "Selecione um cliente abaixo para alterar"}
+          </h2>
+          {selectedId && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSelectedId(null);
+                setForm(emptyForm);
+              }}
+            >
+              Cancelar edição
+            </Button>
+          )}
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
             <Label htmlFor="nome">Nome Completo</Label>
-            <Input id="nome" name="nome" value={form.nome} onChange={handleChange} required />
+            <Input id="nome" name="nome" value={form.nome} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div>
             <Label htmlFor="documento">CPF ou CNPJ</Label>
-            <Input id="documento" name="documento" value={form.documento} onChange={handleChange} required />
+            <Input id="documento" name="documento" value={form.documento} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div>
             <Label htmlFor="telefone">Telefone</Label>
-            <Input id="telefone" name="telefone" value={form.telefone} onChange={handleChange} required />
+            <Input id="telefone" name="telefone" value={form.telefone} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div>
             <Label htmlFor="cep">CEP</Label>
-            <Input id="cep" name="cep" value={form.cep} onChange={handleChange} />
+            <Input id="cep" name="cep" value={form.cep} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div>
             <Label htmlFor="endereco">Endereço</Label>
-            <Input id="endereco" name="endereco" value={form.endereco} onChange={handleChange} />
+            <Input id="endereco" name="endereco" value={form.endereco} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div>
             <Label htmlFor="numero">Número</Label>
-            <Input id="numero" name="numero" value={form.numero} onChange={handleChange} />
+            <Input id="numero" name="numero" value={form.numero} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div>
             <Label htmlFor="bairro">Bairro</Label>
-            <Input id="bairro" name="bairro" value={form.bairro} onChange={handleChange} />
+            <Input id="bairro" name="bairro" value={form.bairro} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div>
             <Label htmlFor="cidade">Cidade</Label>
-            <Input id="cidade" name="cidade" value={form.cidade} onChange={handleChange} />
+            <Input id="cidade" name="cidade" value={form.cidade} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div>
             <Label htmlFor="estado">Estado</Label>
-            <Input id="estado" name="estado" value={form.estado} onChange={handleChange} />
+            <Input id="estado" name="estado" value={form.estado} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="email">E-mail</Label>
-            <Input id="email" name="email" type="email" value={form.email} onChange={handleChange} />
+            <Input id="email" name="email" type="email" value={form.email} onChange={handleChange} disabled={!selectedId} />
           </div>
         </div>
         <Button type="submit" disabled={saving || loading || !selectedId} className="mt-6 font-semibold">
-          Salvar Alteração
+          {saving ? "Salvando..." : "Salvar Alteração"}
         </Button>
       </form>
 
