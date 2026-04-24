@@ -51,7 +51,6 @@ const AdminProdutos = () => {
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isEditing = Boolean(selectedId);
-  const isEditing = Boolean(selectedId);
 
   const fillForm = (produto: Produto) => {
     setSelectedId(produto.id);
