@@ -135,22 +135,40 @@ const AdminOrcamentos = () => {
   return (
     <AdminLayout title="Orçamentos">
       <form onSubmit={handleSubmit} className="mb-6 rounded-lg border border-border bg-card p-6 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="font-heading text-lg font-bold">
+            {selectedId ? "Alterar dados do orçamento" : "Selecione um orçamento abaixo para alterar"}
+          </h2>
+          {selectedId && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setSelectedId(null);
+                setForm(emptyForm);
+              }}
+            >
+              Cancelar edição
+            </Button>
+          )}
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
             <Label htmlFor="nome">Nome Completo</Label>
-            <Input id="nome" name="nome" value={form.nome} onChange={handleChange} required />
+            <Input id="nome" name="nome" value={form.nome} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div>
             <Label htmlFor="empresa">Empresa</Label>
-            <Input id="empresa" name="empresa" value={form.empresa} onChange={handleChange} />
+            <Input id="empresa" name="empresa" value={form.empresa} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div>
             <Label htmlFor="telefone">Telefone</Label>
-            <Input id="telefone" name="telefone" value={form.telefone} onChange={handleChange} required />
+            <Input id="telefone" name="telefone" value={form.telefone} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="email">E-mail</Label>
-            <Input id="email" name="email" type="email" value={form.email} onChange={handleChange} />
+            <Input id="email" name="email" type="email" value={form.email} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="servico">Serviço</Label>
@@ -159,7 +177,8 @@ const AdminOrcamentos = () => {
               name="servico"
               value={form.servico}
               onChange={handleChange}
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+              disabled={!selectedId}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="">Selecione um serviço...</option>
               {servicosOptions.map((s) => (
@@ -169,15 +188,15 @@ const AdminOrcamentos = () => {
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="produto">Produto</Label>
-            <Input id="produto" name="produto" value={form.produto} onChange={handleChange} />
+            <Input id="produto" name="produto" value={form.produto} onChange={handleChange} disabled={!selectedId} />
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="descricao">Descrição / Observações</Label>
-            <Textarea id="descricao" name="descricao" value={form.descricao} onChange={handleChange} rows={4} />
+            <Textarea id="descricao" name="descricao" value={form.descricao} onChange={handleChange} rows={4} disabled={!selectedId} />
           </div>
         </div>
         <Button type="submit" disabled={saving || loading || !selectedId} className="mt-6 font-semibold">
-          Salvar Alteração
+          {saving ? "Salvando..." : "Salvar Alteração"}
         </Button>
       </form>
 
