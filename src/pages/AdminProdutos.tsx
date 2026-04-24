@@ -203,9 +203,37 @@ const AdminProdutos = () => {
             <Label htmlFor="categoria">Categoria</Label>
             <Input id="categoria" name="categoria" value={form.categoria} onChange={handleChange} placeholder="Ex.: Receptores, Acessórios" />
           </div>
-          <div>
-            <Label htmlFor="imagem_url">URL da imagem</Label>
-            <Input id="imagem_url" name="imagem_url" value={form.imagem_url} onChange={handleChange} placeholder="https://..." />
+          <div className="md:col-span-2">
+            <Label htmlFor="imagem_url">Imagem do produto</Label>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Input
+                id="imagem_url"
+                name="imagem_url"
+                value={form.imagem_url}
+                onChange={handleChange}
+                placeholder="Cole uma URL ou envie do computador"
+                className="flex-1"
+              />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageFile}
+                className="hidden"
+              />
+              <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
+                <Upload className="mr-2 h-4 w-4" />
+                Escolher do PC
+              </Button>
+            </div>
+            {form.imagem_url && (
+              <div className="mt-2 flex items-center gap-3 rounded border border-border bg-muted/30 p-2">
+                <img src={form.imagem_url} alt="Pré-visualização" className="h-16 w-16 rounded object-contain bg-white" />
+                <Button type="button" variant="ghost" size="sm" onClick={clearImage}>
+                  <X className="mr-1 h-4 w-4" /> Remover
+                </Button>
+              </div>
+            )}
           </div>
           <div>
             <Label htmlFor="preco_original">Preço original (R$)</Label>
