@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,8 +10,9 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 const AdminLogin = () => {
   const navigate = useNavigate();
   const { signIn, isAdmin, isLoading } = useAdminAuth();
-  const [email, setEmail] = useState("ivandelima@gmail.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   if (!isLoading && isAdmin) return <Navigate to="/dashboard" replace />;
