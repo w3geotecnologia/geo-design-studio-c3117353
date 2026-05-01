@@ -13,6 +13,7 @@ type Produto = {
   preco: number | null;
   esgotado: boolean | null;
   link_externo: string | null;
+  estoque: number | null;
 };
 
 const formatBRL = (value: number) =>
