@@ -27,7 +27,7 @@ const ProductsSection = () => {
     (async () => {
       const { data } = await supabase
         .from("produtos")
-        .select("id,nome,categoria,imagem_url,preco_original,preco,esgotado,link_externo")
+        .select("id,nome,categoria,imagem_url,preco_original,preco,esgotado,estoque,link_externo")
         .eq("ativo", true)
         .order("nome", { ascending: true });
       setProdutos(data ?? []);
