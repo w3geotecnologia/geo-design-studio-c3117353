@@ -7,6 +7,7 @@ import { AdminAuthProvider } from "@/hooks/useAdminAuth";
 import ProtectedAdminRoute from "@/components/ProtectedAdminRoute";
 import Index from "./pages/Index.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
+import Entrar from "./pages/Entrar.tsx";
 import Orcamento from "./pages/Orcamento.tsx";
 import AdminLogin from "./pages/AdminLogin.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
@@ -27,6 +28,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/cadastro" element={<Cadastro />} />
+            <Route path="/entrar" element={<Entrar />} />
             <Route path="/orcamento" element={<Orcamento />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/dashboard" element={<ProtectedAdminRoute><Dashboard /></ProtectedAdminRoute>} />
