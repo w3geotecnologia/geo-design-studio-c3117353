@@ -20,6 +20,8 @@ type Produto = {
   esgotado: boolean | null;
   ativo: boolean | null;
   link_externo: string | null;
+  estoque: number | null;
+  qtde_minima: number | null;
 };
 
 const emptyForm = {
@@ -32,14 +34,37 @@ const emptyForm = {
   esgotado: false,
   ativo: true,
   link_externo: "",
+  estoque: "",
+  qtde_minima: "",
 };
 
 type FormState = typeof emptyForm;
 
 const toNumber = (value: string): number | null => {
   if (!value.trim()) return null;
-  const n = Number(value.replace(",", "."));
+  const digits = value.replace(/\D/g, "");
+  if (!digits) return null;
+  const n = Number(digits) / 100;
   return Number.isFinite(n) ? n : null;
+};
+
+const toInt = (value: string): number | null => {
+  if (!value.trim()) return null;
+  const n = parseInt(value.replace(/\D/g, ""), 10);
+  return Number.isFinite(n) ? n : null;
+};
+
+// Auto-format BRL: digits-only -> "1.234,56"
+const formatBRLInput = (value: string): string => {
+  const digits = value.replace(/\D/g, "");
+  if (!digits) return "";
+  const n = Number(digits) / 100;
+  return n.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+};
+
+const numberToBRLInput = (n: number | null | undefined): string => {
+  if (n == null) return "";
+  return n.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
 const AdminProdutos = () => {
@@ -59,11 +84,13 @@ const AdminProdutos = () => {
       categoria: produto.categoria ?? "",
       descricao: produto.descricao ?? "",
       imagem_url: produto.imagem_url ?? "",
-      preco_original: produto.preco_original?.toString() ?? "",
-      preco: produto.preco?.toString() ?? "",
+      preco_original: numberToBRLInput(produto.preco_original),
+      preco: numberToBRLInput(produto.preco),
       esgotado: Boolean(produto.esgotado),
       ativo: produto.ativo ?? true,
       link_externo: produto.link_externo ?? "",
+      estoque: produto.estoque?.toString() ?? "",
+      qtde_minima: produto.qtde_minima?.toString() ?? "",
     });
   };
 
@@ -76,7 +103,7 @@ const AdminProdutos = () => {
     setLoading(true);
     const { data, error } = await supabase
       .from("produtos")
-      .select("id,nome,categoria,descricao,imagem_url,preco_original,preco,esgotado,ativo,link_externo")
+      .select("id,nome,categoria,descricao,imagem_url,preco_original,preco,esgotado,ativo,link_externo,estoque,qtde_minima")
       .order("nome", { ascending: true });
     setLoading(false);
 
@@ -101,7 +128,11 @@ const AdminProdutos = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = event.target;
-    const value = target instanceof HTMLInputElement && target.type === "checkbox" ? target.checked : target.value;
+    let value: string | boolean =
+      target instanceof HTMLInputElement && target.type === "checkbox" ? target.checked : target.value;
+    if (target.name === "preco" || target.name === "preco_original") {
+      value = formatBRLInput(String(value));
+    }
     setForm((current) => ({ ...current, [target.name]: value }));
   };
 
@@ -146,6 +177,8 @@ const AdminProdutos = () => {
       esgotado: form.esgotado,
       ativo: form.ativo,
       link_externo: form.link_externo.trim() || null,
+      estoque: toInt(form.estoque) ?? 0,
+      qtde_minima: toInt(form.qtde_minima) ?? 0,
     };
 
     const query = selectedId
@@ -237,11 +270,19 @@ const AdminProdutos = () => {
           </div>
           <div>
             <Label htmlFor="preco_original">Preço original (R$)</Label>
-            <Input id="preco_original" name="preco_original" type="number" step="0.01" value={form.preco_original} onChange={handleChange} placeholder="630.00" />
+            <Input id="preco_original" name="preco_original" inputMode="numeric" value={form.preco_original} onChange={handleChange} placeholder="0,00" />
           </div>
           <div>
             <Label htmlFor="preco">Preço de venda (R$)</Label>
-            <Input id="preco" name="preco" type="number" step="0.01" value={form.preco} onChange={handleChange} placeholder="600.00" />
+            <Input id="preco" name="preco" inputMode="numeric" value={form.preco} onChange={handleChange} placeholder="0,00" />
+          </div>
+          <div>
+            <Label htmlFor="estoque">Estoque (qtde. atual)</Label>
+            <Input id="estoque" name="estoque" type="number" min="0" value={form.estoque} onChange={handleChange} placeholder="0" />
+          </div>
+          <div>
+            <Label htmlFor="qtde_minima">Quantidade mínima</Label>
+            <Input id="qtde_minima" name="qtde_minima" type="number" min="0" value={form.qtde_minima} onChange={handleChange} placeholder="0" />
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="link_externo">Link externo (opcional)</Label>

@@ -13,6 +13,7 @@ type Produto = {
   preco: number | null;
   esgotado: boolean | null;
   link_externo: string | null;
+  estoque: number | null;
 };
 
 const formatBRL = (value: number) =>
@@ -26,7 +27,7 @@ const ProductsSection = () => {
     (async () => {
       const { data } = await supabase
         .from("produtos")
-        .select("id,nome,categoria,imagem_url,preco_original,preco,esgotado,link_externo")
+        .select("id,nome,categoria,imagem_url,preco_original,preco,esgotado,estoque,link_externo")
         .eq("ativo", true)
         .order("nome", { ascending: true });
       setProdutos(data ?? []);
@@ -102,7 +103,7 @@ const ProductsSection = () => {
                     <h3 className="font-heading font-semibold text-sm text-foreground mb-3 line-clamp-2 min-h-[2.5rem]">
                       {p.nome}
                     </h3>
-                    <div className="mb-4">
+                    <div className="mb-2">
                       {p.preco_original != null && p.preco != null && p.preco_original > p.preco && (
                         <span className="text-xs text-muted-foreground line-through mr-2">
                           {formatBRL(p.preco_original)}
@@ -111,6 +112,19 @@ const ProductsSection = () => {
                       <span className="text-base font-bold text-primary">
                         {p.preco != null ? formatBRL(p.preco) : "Sob consulta"}
                       </span>
+                    </div>
+                    <div className="mb-3">
+                      {(p.estoque ?? 0) > 0 && !p.esgotado ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-600">
+                          <span className="h-2 w-2 rounded-full bg-green-600" />
+                          Disponível ({p.estoque} em estoque)
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-destructive">
+                          <span className="h-2 w-2 rounded-full bg-destructive" />
+                          Fora de estoque
+                        </span>
+                      )}
                     </div>
                     <Button
                       asChild
