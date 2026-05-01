@@ -1,5 +1,7 @@
 import { Wrench, MapPin, Cpu, Plane } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const services = [
   {
@@ -24,9 +26,19 @@ const services = [
   },
 ];
 
-const ServicesSection = () => (
+const ServicesSection = () => {
+  const navigate = useNavigate();
+  return (
   <section id="servicos" className="py-20 bg-section-light">
     <div className="container">
+      <div className="flex justify-start mb-8">
+        <Button
+          onClick={() => navigate("/orcamento")}
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6"
+        >
+          Solicitação de Serviços
+        </Button>
+      </div>
       <div className="text-center mb-14">
         <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4">Nossos Serviços</h2>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
@@ -53,6 +65,7 @@ const ServicesSection = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default ServicesSection;
