@@ -66,10 +66,10 @@ const Navbar = () => {
                 <p className="font-semibold text-foreground">Seja Bem Vindo</p>
                 <button
                   type="button"
-                  onClick={() => navigate(isAdmin ? "/dashboard" : "/cadastro")}
+                  onClick={() => navigate(isAdmin ? "/dashboard" : "/entrar")}
                   className="text-primary text-xs hover:underline"
                 >
-                  {isAdmin ? "Alterações" : "Cadastro"}
+                  {isAdmin ? "Alterações" : "Entrar"}
                 </button>
               </div>
               <button
@@ -113,7 +113,7 @@ const Navbar = () => {
                 {link.label}
               </a>
             ))}
-            <Button className="w-full" onClick={() => { navigate(isAdmin ? "/dashboard" : "/cadastro"); setMobileOpen(false); }}>{isAdmin ? "Alterações" : "Cadastro"}</Button>
+            <Button className="w-full" onClick={() => { navigate(isAdmin ? "/dashboard" : "/entrar"); setMobileOpen(false); }}>{isAdmin ? "Alterações" : "Entrar"}</Button>
             
           </div>
         )}
