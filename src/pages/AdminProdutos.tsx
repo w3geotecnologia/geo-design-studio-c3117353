@@ -270,11 +270,19 @@ const AdminProdutos = () => {
           </div>
           <div>
             <Label htmlFor="preco_original">Preço original (R$)</Label>
-            <Input id="preco_original" name="preco_original" type="number" step="0.01" value={form.preco_original} onChange={handleChange} placeholder="630.00" />
+            <Input id="preco_original" name="preco_original" inputMode="numeric" value={form.preco_original} onChange={handleChange} placeholder="0,00" />
           </div>
           <div>
             <Label htmlFor="preco">Preço de venda (R$)</Label>
-            <Input id="preco" name="preco" type="number" step="0.01" value={form.preco} onChange={handleChange} placeholder="600.00" />
+            <Input id="preco" name="preco" inputMode="numeric" value={form.preco} onChange={handleChange} placeholder="0,00" />
+          </div>
+          <div>
+            <Label htmlFor="estoque">Estoque (qtde. atual)</Label>
+            <Input id="estoque" name="estoque" type="number" min="0" value={form.estoque} onChange={handleChange} placeholder="0" />
+          </div>
+          <div>
+            <Label htmlFor="qtde_minima">Quantidade mínima</Label>
+            <Input id="qtde_minima" name="qtde_minima" type="number" min="0" value={form.qtde_minima} onChange={handleChange} placeholder="0" />
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="link_externo">Link externo (opcional)</Label>
