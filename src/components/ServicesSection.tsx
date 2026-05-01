@@ -65,6 +65,7 @@ const ServicesSection = () => {
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default ServicesSection;

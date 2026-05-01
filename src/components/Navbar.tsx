@@ -82,9 +82,6 @@ const Navbar = () => {
                 <LogOut className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
-            <Button onClick={() => navigate("/orcamento")} className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6">
-              Orçamento
-            </Button>
           </div>
 
           {/* Mobile toggle */}
@@ -117,7 +114,7 @@ const Navbar = () => {
               </a>
             ))}
             <Button className="w-full" onClick={() => { navigate(isAdmin ? "/dashboard" : "/cadastro"); setMobileOpen(false); }}>{isAdmin ? "Alterações" : "Cadastro"}</Button>
-            <Button className="w-full bg-primary text-primary-foreground font-semibold" onClick={() => { navigate("/orcamento"); setMobileOpen(false); }}>Orçamento</Button>
+            
           </div>
         )}
       </header>
