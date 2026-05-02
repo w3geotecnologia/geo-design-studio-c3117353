@@ -56,15 +56,21 @@ const ProductsSection = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {produtos.map((p, i) => {
-              const action = p.link_externo ? (
+              const indisponivel = p.esgotado || (p.estoque ?? 0) <= 0;
+              const action = indisponivel && p.link_externo ? (
                 <a href={p.link_externo} target="_blank" rel="noopener noreferrer">
                   <ShoppingCart className="w-4 h-4 mr-2" />
-                  {p.esgotado ? "Leia mais" : "Solicitar Orçamento"}
+                  Leia mais
                 </a>
-              ) : (
+              ) : indisponivel ? (
                 <a href="/orcamento">
                   <ShoppingCart className="w-4 h-4 mr-2" />
                   Solicitar Orçamento
+                </a>
+              ) : (
+                <a href={`/checkout?produto=${p.id}`}>
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Comprar
                 </a>
               );
 
