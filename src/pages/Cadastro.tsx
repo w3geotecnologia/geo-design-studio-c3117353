@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,8 @@ import { supabase } from "@/lib/supabase";
 
 const Cadastro = () => {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const redirect = params.get("redirect");
   const [isSaving, setIsSaving] = useState(false);
   const [form, setForm] = useState({
     nome: "", endereco: "", numero: "", cep: "", bairro: "", cidade: "", estado: "", documento: "", telefone: "", email: "",
@@ -46,7 +48,11 @@ const Cadastro = () => {
     e.preventDefault();
 
     setIsSaving(true);
-    const { error } = await supabase.from("cadastro_clientes").insert(form);
+    const { data, error } = await supabase
+      .from("cadastro_clientes")
+      .insert(form)
+      .select("id")
+      .single();
     setIsSaving(false);
 
     if (error) {
@@ -54,8 +60,9 @@ const Cadastro = () => {
       return;
     }
 
+    if (data?.id) localStorage.setItem("cliente_id", String(data.id));
     toast({ title: "Cadastro realizado com sucesso!" });
-    navigate("/");
+    navigate(redirect || "/");
   };
 
   return (
