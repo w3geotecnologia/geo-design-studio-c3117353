@@ -8,6 +8,7 @@ import ProtectedAdminRoute from "@/components/ProtectedAdminRoute";
 import Index from "./pages/Index.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
 import Orcamento from "./pages/Orcamento.tsx";
+import Checkout from "./pages/Checkout.tsx";
 import AdminLogin from "./pages/AdminLogin.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import AdminClientes from "./pages/AdminClientes.tsx";
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/cadastro" element={<Cadastro />} />
             <Route path="/orcamento" element={<Orcamento />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/dashboard" element={<ProtectedAdminRoute><Dashboard /></ProtectedAdminRoute>} />
             <Route path="/dashboard/clientes" element={<ProtectedAdminRoute><AdminClientes /></ProtectedAdminRoute>} />
