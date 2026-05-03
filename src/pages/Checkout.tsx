@@ -92,6 +92,7 @@ const Checkout = () => {
       toast({ title: "Calcule o frete antes de finalizar", variant: "destructive" });
       return;
     }
+    localStorage.removeItem("cliente_id");
     toast({
       title: "Pedido recebido!",
       description: "Em breve entraremos em contato para concluir o pagamento.",
