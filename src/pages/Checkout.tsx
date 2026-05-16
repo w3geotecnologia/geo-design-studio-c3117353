@@ -361,7 +361,19 @@ const Checkout = () => {
             {/* Resumo */}
             <div className="lg:col-span-1">
               <div className="bg-card rounded-xl shadow-sm p-6 sticky top-4">
-                <h2 className="font-heading font-semibold text-lg mb-4">Resumo</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-heading font-semibold text-lg">Resumo</h2>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={limparCarrinho}
+                    className="text-destructive hover:text-destructive h-8 px-2"
+                  >
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Limpar
+                  </Button>
+                </div>
                 <div className="space-y-2 text-sm">
                   {cart.map((item) => {
                     const p = produtos[item.produtoId];
