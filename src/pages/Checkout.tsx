@@ -4,6 +4,14 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -51,6 +59,9 @@ const Checkout = () => {
   const [cep, setCep] = useState("");
   const [frete, setFrete] = useState<number | null>(null);
   const [calculandoFrete, setCalculandoFrete] = useState(false);
+  const [showQuickRegister, setShowQuickRegister] = useState(false);
+  const [quickForm, setQuickForm] = useState({ nome: "", email: "", telefone: "" });
+  const [savingQuick, setSavingQuick] = useState(false);
 
   // Inicializa carrinho: combina o existente + produto novo via URL
   useEffect(() => {
@@ -158,20 +169,7 @@ const Checkout = () => {
     }
   };
 
-  const finalizarCompra = () => {
-    if (cart.length === 0) {
-      toast({ title: "Carrinho vazio", variant: "destructive" });
-      return;
-    }
-    const clienteId = localStorage.getItem("cliente_id");
-    if (!clienteId) {
-      toast({
-        title: "Cadastro necessário",
-        description: "Você precisa se cadastrar para finalizar a compra.",
-      });
-      navigate(`/cadastro?redirect=/checkout`);
-      return;
-    }
+  const concluirPedido = () => {
     localStorage.removeItem("cliente_id");
     localStorage.removeItem(CART_KEY);
     setCart([]);
@@ -180,6 +178,47 @@ const Checkout = () => {
       description: "Em breve entraremos em contato para concluir o pagamento.",
     });
     navigate("/");
+  };
+
+  const finalizarCompra = () => {
+    if (cart.length === 0) {
+      toast({ title: "Carrinho vazio", variant: "destructive" });
+      return;
+    }
+    const clienteId = localStorage.getItem("cliente_id");
+    if (!clienteId) {
+      setShowQuickRegister(true);
+      return;
+    }
+    concluirPedido();
+  };
+
+  const limparCarrinho = () => {
+    localStorage.removeItem(CART_KEY);
+    setCart([]);
+    toast({ title: "Carrinho esvaziado" });
+  };
+
+  const salvarCadastroRapido = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!quickForm.nome.trim() || !quickForm.email.trim() || !quickForm.telefone.trim()) {
+      toast({ title: "Preencha todos os campos", variant: "destructive" });
+      return;
+    }
+    setSavingQuick(true);
+    const { data, error } = await supabase
+      .from("cadastro_clientes")
+      .insert(quickForm)
+      .select("id")
+      .single();
+    setSavingQuick(false);
+    if (error) {
+      toast({ title: "Erro ao cadastrar", description: error.message, variant: "destructive" });
+      return;
+    }
+    if (data?.id) localStorage.setItem("cliente_id", String(data.id));
+    setShowQuickRegister(false);
+    concluirPedido();
   };
 
   return (
@@ -322,7 +361,19 @@ const Checkout = () => {
             {/* Resumo */}
             <div className="lg:col-span-1">
               <div className="bg-card rounded-xl shadow-sm p-6 sticky top-4">
-                <h2 className="font-heading font-semibold text-lg mb-4">Resumo</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-heading font-semibold text-lg">Resumo</h2>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={limparCarrinho}
+                    className="text-destructive hover:text-destructive h-8 px-2"
+                  >
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Limpar
+                  </Button>
+                </div>
                 <div className="space-y-2 text-sm">
                   {cart.map((item) => {
                     const p = produtos[item.produtoId];
@@ -383,6 +434,63 @@ const Checkout = () => {
           </div>
         )}
       </main>
+
+      <Dialog open={showQuickRegister} onOpenChange={setShowQuickRegister}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Cadastro rápido</DialogTitle>
+            <DialogDescription>
+              Informe seus dados para finalizar a compra.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={salvarCadastroRapido} className="space-y-3">
+            <div>
+              <Label htmlFor="q-nome">Nome</Label>
+              <Input
+                id="q-nome"
+                value={quickForm.nome}
+                onChange={(e) => setQuickForm({ ...quickForm, nome: e.target.value })}
+                placeholder="Seu nome"
+              />
+            </div>
+            <div>
+              <Label htmlFor="q-email">E-mail</Label>
+              <Input
+                id="q-email"
+                type="email"
+                value={quickForm.email}
+                onChange={(e) => setQuickForm({ ...quickForm, email: e.target.value })}
+                placeholder="seu@email.com"
+              />
+            </div>
+            <div>
+              <Label htmlFor="q-tel">Telefone</Label>
+              <Input
+                id="q-tel"
+                value={quickForm.telefone}
+                onChange={(e) => setQuickForm({ ...quickForm, telefone: e.target.value })}
+                placeholder="(19) 99999-9999"
+              />
+            </div>
+            <DialogFooter className="flex flex-col sm:flex-row gap-2 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowQuickRegister(false);
+                  navigate(`/cadastro?redirect=/checkout`);
+                }}
+              >
+                Cadastro completo
+              </Button>
+              <Button type="submit" disabled={savingQuick}>
+                {savingQuick ? "Salvando..." : "Finalizar Compra"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <Footer />
     </div>
   );
