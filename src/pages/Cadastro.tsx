@@ -114,7 +114,7 @@ const Cadastro = () => {
       <Navbar />
       <main className="flex-1 container py-12">
         <div className="max-w-2xl mx-auto bg-card rounded-2xl shadow-lg p-8">
-          <h1 className="text-2xl font-heading font-bold text-foreground mb-6">Cadastro de Cliente</h1>
+          <h1 className="text-2xl font-heading font-bold text-foreground mb-6">{clienteId ? "Editar Cadastro" : "Cadastro de Cliente"}</h1>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <Label htmlFor="nome">Nome Completo</Label>
