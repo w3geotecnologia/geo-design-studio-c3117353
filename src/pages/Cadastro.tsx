@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,9 +14,37 @@ const Cadastro = () => {
   const [params] = useSearchParams();
   const redirect = params.get("redirect");
   const [isSaving, setIsSaving] = useState(false);
+  const [clienteId, setClienteId] = useState<string | null>(null);
   const [form, setForm] = useState({
     nome: "", endereco: "", numero: "", cep: "", bairro: "", cidade: "", estado: "", documento: "", telefone: "", email: "",
   });
+
+  useEffect(() => {
+    const id = localStorage.getItem("cliente_id");
+    if (!id) return;
+    setClienteId(id);
+    (async () => {
+      const { data } = await supabase
+        .from("cadastro_clientes")
+        .select("nome,endereco,numero,cep,bairro,cidade,estado,documento,telefone,email")
+        .eq("id", id)
+        .maybeSingle();
+      if (data) {
+        setForm({
+          nome: data.nome ?? "",
+          endereco: data.endereco ?? "",
+          numero: data.numero ?? "",
+          cep: data.cep ?? "",
+          bairro: data.bairro ?? "",
+          cidade: data.cidade ?? "",
+          estado: data.estado ?? "",
+          documento: data.documento ?? "",
+          telefone: data.telefone ?? "",
+          email: data.email ?? "",
+        });
+      }
+    })();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -46,8 +74,23 @@ const Cadastro = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setIsSaving(true);
+
+    if (clienteId) {
+      const { error } = await supabase
+        .from("cadastro_clientes")
+        .update(form)
+        .eq("id", clienteId);
+      setIsSaving(false);
+      if (error) {
+        toast({ title: "Erro ao atualizar cadastro", description: error.message, variant: "destructive" });
+        return;
+      }
+      toast({ title: "Cadastro atualizado com sucesso!" });
+      navigate(redirect || "/");
+      return;
+    }
+
     const { data, error } = await supabase
       .from("cadastro_clientes")
       .insert(form)
@@ -71,7 +114,7 @@ const Cadastro = () => {
       <Navbar />
       <main className="flex-1 container py-12">
         <div className="max-w-2xl mx-auto bg-card rounded-2xl shadow-lg p-8">
-          <h1 className="text-2xl font-heading font-bold text-foreground mb-6">Cadastro de Cliente</h1>
+          <h1 className="text-2xl font-heading font-bold text-foreground mb-6">{clienteId ? "Editar Cadastro" : "Cadastro de Cliente"}</h1>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <Label htmlFor="nome">Nome Completo</Label>
@@ -114,7 +157,7 @@ const Cadastro = () => {
               <Input name="email" type="email" value={form.email} onChange={handleChange} placeholder="seu@email.com" />
             </div>
             <div className="md:col-span-2 mt-4">
-              <Button type="submit" disabled={isSaving} className="w-full bg-primary text-primary-foreground font-semibold">Cadastrar</Button>
+              <Button type="submit" disabled={isSaving} className="w-full bg-primary text-primary-foreground font-semibold">{isSaving ? "Salvando..." : clienteId ? "Salvar alterações" : "Cadastrar"}</Button>
             </div>
             <div className="md:col-span-2 text-center mt-2">
               <button type="button" onClick={() => navigate("/")} className="text-primary text-sm hover:underline">
