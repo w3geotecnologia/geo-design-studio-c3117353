@@ -59,6 +59,9 @@ const Checkout = () => {
   const [cep, setCep] = useState("");
   const [frete, setFrete] = useState<number | null>(null);
   const [calculandoFrete, setCalculandoFrete] = useState(false);
+  const [showQuickRegister, setShowQuickRegister] = useState(false);
+  const [quickForm, setQuickForm] = useState({ nome: "", email: "", telefone: "" });
+  const [savingQuick, setSavingQuick] = useState(false);
 
   // Inicializa carrinho: combina o existente + produto novo via URL
   useEffect(() => {
