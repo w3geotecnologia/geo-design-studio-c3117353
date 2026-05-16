@@ -169,20 +169,7 @@ const Checkout = () => {
     }
   };
 
-  const finalizarCompra = () => {
-    if (cart.length === 0) {
-      toast({ title: "Carrinho vazio", variant: "destructive" });
-      return;
-    }
-    const clienteId = localStorage.getItem("cliente_id");
-    if (!clienteId) {
-      toast({
-        title: "Cadastro necessário",
-        description: "Você precisa se cadastrar para finalizar a compra.",
-      });
-      navigate(`/cadastro?redirect=/checkout`);
-      return;
-    }
+  const concluirPedido = () => {
     localStorage.removeItem("cliente_id");
     localStorage.removeItem(CART_KEY);
     setCart([]);
@@ -191,6 +178,47 @@ const Checkout = () => {
       description: "Em breve entraremos em contato para concluir o pagamento.",
     });
     navigate("/");
+  };
+
+  const finalizarCompra = () => {
+    if (cart.length === 0) {
+      toast({ title: "Carrinho vazio", variant: "destructive" });
+      return;
+    }
+    const clienteId = localStorage.getItem("cliente_id");
+    if (!clienteId) {
+      setShowQuickRegister(true);
+      return;
+    }
+    concluirPedido();
+  };
+
+  const limparCarrinho = () => {
+    localStorage.removeItem(CART_KEY);
+    setCart([]);
+    toast({ title: "Carrinho esvaziado" });
+  };
+
+  const salvarCadastroRapido = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!quickForm.nome.trim() || !quickForm.email.trim() || !quickForm.telefone.trim()) {
+      toast({ title: "Preencha todos os campos", variant: "destructive" });
+      return;
+    }
+    setSavingQuick(true);
+    const { data, error } = await supabase
+      .from("cadastro_clientes")
+      .insert(quickForm)
+      .select("id")
+      .single();
+    setSavingQuick(false);
+    if (error) {
+      toast({ title: "Erro ao cadastrar", description: error.message, variant: "destructive" });
+      return;
+    }
+    if (data?.id) localStorage.setItem("cliente_id", String(data.id));
+    setShowQuickRegister(false);
+    concluirPedido();
   };
 
   return (
