@@ -206,9 +206,21 @@ const Checkout = () => {
       return;
     }
     setSavingQuick(true);
+    const payload = {
+      nome: quickForm.nome,
+      email: quickForm.email,
+      telefone: quickForm.telefone,
+      documento: "",
+      endereco: "",
+      numero: "",
+      cep: "",
+      bairro: "",
+      cidade: "",
+      estado: "",
+    };
     const { data, error } = await supabase
       .from("cadastro_clientes")
-      .insert(quickForm)
+      .insert(payload)
       .select("id")
       .single();
     setSavingQuick(false);
