@@ -157,7 +157,7 @@ const Cadastro = () => {
               <Input name="email" type="email" value={form.email} onChange={handleChange} placeholder="seu@email.com" />
             </div>
             <div className="md:col-span-2 mt-4">
-              <Button type="submit" disabled={isSaving} className="w-full bg-primary text-primary-foreground font-semibold">Cadastrar</Button>
+              <Button type="submit" disabled={isSaving} className="w-full bg-primary text-primary-foreground font-semibold">{isSaving ? "Salvando..." : clienteId ? "Salvar alterações" : "Cadastrar"}</Button>
             </div>
             <div className="md:col-span-2 text-center mt-2">
               <button type="button" onClick={() => navigate("/")} className="text-primary text-sm hover:underline">
