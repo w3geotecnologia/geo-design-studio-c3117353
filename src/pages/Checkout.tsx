@@ -434,6 +434,63 @@ const Checkout = () => {
           </div>
         )}
       </main>
+
+      <Dialog open={showQuickRegister} onOpenChange={setShowQuickRegister}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Cadastro rápido</DialogTitle>
+            <DialogDescription>
+              Informe seus dados para finalizar a compra.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={salvarCadastroRapido} className="space-y-3">
+            <div>
+              <Label htmlFor="q-nome">Nome</Label>
+              <Input
+                id="q-nome"
+                value={quickForm.nome}
+                onChange={(e) => setQuickForm({ ...quickForm, nome: e.target.value })}
+                placeholder="Seu nome"
+              />
+            </div>
+            <div>
+              <Label htmlFor="q-email">E-mail</Label>
+              <Input
+                id="q-email"
+                type="email"
+                value={quickForm.email}
+                onChange={(e) => setQuickForm({ ...quickForm, email: e.target.value })}
+                placeholder="seu@email.com"
+              />
+            </div>
+            <div>
+              <Label htmlFor="q-tel">Telefone</Label>
+              <Input
+                id="q-tel"
+                value={quickForm.telefone}
+                onChange={(e) => setQuickForm({ ...quickForm, telefone: e.target.value })}
+                placeholder="(19) 99999-9999"
+              />
+            </div>
+            <DialogFooter className="flex flex-col sm:flex-row gap-2 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowQuickRegister(false);
+                  navigate(`/cadastro?redirect=/checkout`);
+                }}
+              >
+                Cadastro completo
+              </Button>
+              <Button type="submit" disabled={savingQuick}>
+                {savingQuick ? "Salvando..." : "Finalizar Compra"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <Footer />
     </div>
   );
