@@ -64,13 +64,6 @@ const Navbar = () => {
               </button>
               <div className="leading-tight">
                 <p className="font-semibold text-foreground">Seja Bem Vindo</p>
-                <button
-                  type="button"
-                  onClick={() => navigate(isAdmin ? "/dashboard" : "/cadastro")}
-                  className="text-primary text-xs hover:underline"
-                >
-                  {isAdmin ? "Alterações" : "Cadastro"}
-                </button>
               </div>
               <button
                 type="button"
