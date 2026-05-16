@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,9 +14,37 @@ const Cadastro = () => {
   const [params] = useSearchParams();
   const redirect = params.get("redirect");
   const [isSaving, setIsSaving] = useState(false);
+  const [clienteId, setClienteId] = useState<string | null>(null);
   const [form, setForm] = useState({
     nome: "", endereco: "", numero: "", cep: "", bairro: "", cidade: "", estado: "", documento: "", telefone: "", email: "",
   });
+
+  useEffect(() => {
+    const id = localStorage.getItem("cliente_id");
+    if (!id) return;
+    setClienteId(id);
+    (async () => {
+      const { data } = await supabase
+        .from("cadastro_clientes")
+        .select("nome,endereco,numero,cep,bairro,cidade,estado,documento,telefone,email")
+        .eq("id", id)
+        .maybeSingle();
+      if (data) {
+        setForm({
+          nome: data.nome ?? "",
+          endereco: data.endereco ?? "",
+          numero: data.numero ?? "",
+          cep: data.cep ?? "",
+          bairro: data.bairro ?? "",
+          cidade: data.cidade ?? "",
+          estado: data.estado ?? "",
+          documento: data.documento ?? "",
+          telefone: data.telefone ?? "",
+          email: data.email ?? "",
+        });
+      }
+    })();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -46,8 +74,23 @@ const Cadastro = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setIsSaving(true);
+
+    if (clienteId) {
+      const { error } = await supabase
+        .from("cadastro_clientes")
+        .update(form)
+        .eq("id", clienteId);
+      setIsSaving(false);
+      if (error) {
+        toast({ title: "Erro ao atualizar cadastro", description: error.message, variant: "destructive" });
+        return;
+      }
+      toast({ title: "Cadastro atualizado com sucesso!" });
+      navigate(redirect || "/");
+      return;
+    }
+
     const { data, error } = await supabase
       .from("cadastro_clientes")
       .insert(form)
