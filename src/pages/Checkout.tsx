@@ -488,7 +488,30 @@ const Checkout = () => {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => {
+                onClick={async () => {
+                  // se já preencheu algo no cadastro rápido, salva primeiro para edição
+                  if (
+                    !localStorage.getItem("cliente_id") &&
+                    (quickForm.nome || quickForm.email || quickForm.telefone)
+                  ) {
+                    const { data } = await supabase
+                      .from("cadastro_clientes")
+                      .insert({
+                        nome: quickForm.nome,
+                        email: quickForm.email,
+                        telefone: quickForm.telefone,
+                        documento: "",
+                        endereco: "",
+                        numero: "",
+                        cep: "",
+                        bairro: "",
+                        cidade: "",
+                        estado: "",
+                      })
+                      .select("id")
+                      .single();
+                    if (data?.id) localStorage.setItem("cliente_id", String(data.id));
+                  }
                   setShowQuickRegister(false);
                   navigate(`/cadastro?redirect=/checkout`);
                 }}
