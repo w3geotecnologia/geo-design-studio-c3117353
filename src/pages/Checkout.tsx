@@ -169,7 +169,41 @@ const Checkout = () => {
     }
   };
 
-  const concluirPedido = () => {
+  const gravarResumoNoCliente = async (clienteId: string) => {
+    const itens = cart.map((i) => {
+      const p = produtos[i.produtoId];
+      return {
+        produto_id: i.produtoId,
+        nome: p?.nome ?? null,
+        preco: p?.preco ?? 0,
+        qty: i.qty,
+        subtotal: (p?.preco ?? 0) * i.qty,
+      };
+    });
+    const { error } = await supabase
+      .from("cadastro_clientes")
+      .update({
+        pedido_itens: itens,
+        pedido_subtotal: subtotal,
+        pedido_frete: frete ?? 0,
+        pedido_total: total,
+        pedido_cep: cep || null,
+        pedido_status: "pendente",
+        pedido_data: new Date().toISOString(),
+      })
+      .eq("id", clienteId);
+    if (error) {
+      toast({
+        title: "Pedido registrado parcialmente",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const concluirPedido = async (clienteIdParam?: string) => {
+    const clienteId = clienteIdParam ?? localStorage.getItem("cliente_id");
+    if (clienteId) await gravarResumoNoCliente(clienteId);
     localStorage.removeItem("cliente_id");
     localStorage.removeItem(CART_KEY);
     setCart([]);
