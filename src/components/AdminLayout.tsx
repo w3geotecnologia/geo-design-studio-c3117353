@@ -1,4 +1,4 @@
-import { ClipboardList, FileText, LogOut, Package, Users, Wrench } from "lucide-react";
+import { ClipboardList, FileText, LogOut, Package, ShoppingCart, Users, Wrench } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
@@ -6,6 +6,7 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 const menuItems = [
   { label: "Cadastro Clientes", href: "/dashboard/clientes", icon: Users },
   { label: "Orçamentos", href: "/dashboard/orcamentos", icon: ClipboardList },
+  { label: "Pedidos", href: "/dashboard/pedidos", icon: ShoppingCart },
   { label: "Produtos", href: "/dashboard/produtos", icon: Package },
   { label: "Serviços", href: "/dashboard/servicos", icon: Wrench },
 ];
