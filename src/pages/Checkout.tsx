@@ -169,7 +169,7 @@ const Checkout = () => {
     }
   };
 
-  const gravarResumoNoCliente = async (clienteId: string) => {
+  const gravarPedido = async (clienteId: string) => {
     const itens = cart.map((i) => {
       const p = produtos[i.produtoId];
       return {
@@ -180,21 +180,18 @@ const Checkout = () => {
         subtotal: (p?.preco ?? 0) * i.qty,
       };
     });
-    const { error } = await supabase
-      .from("cadastro_clientes")
-      .update({
-        pedido_itens: itens,
-        pedido_subtotal: subtotal,
-        pedido_frete: frete ?? 0,
-        pedido_total: total,
-        pedido_cep: cep || null,
-        pedido_status: "pendente",
-        pedido_data: new Date().toISOString(),
-      })
-      .eq("id", clienteId);
+    const { error } = await supabase.from("pedidos").insert({
+      cliente_id: clienteId,
+      itens,
+      subtotal,
+      frete: frete ?? 0,
+      total,
+      cep: cep || null,
+      status: "pendente",
+    });
     if (error) {
       toast({
-        title: "Pedido registrado parcialmente",
+        title: "Erro ao registrar pedido",
         description: error.message,
         variant: "destructive",
       });
@@ -203,7 +200,7 @@ const Checkout = () => {
 
   const concluirPedido = async (clienteIdParam?: string) => {
     const clienteId = clienteIdParam ?? localStorage.getItem("cliente_id");
-    if (clienteId) await gravarResumoNoCliente(clienteId);
+    if (clienteId) await gravarPedido(clienteId);
     localStorage.removeItem("cliente_id");
     localStorage.removeItem(CART_KEY);
     setCart([]);
