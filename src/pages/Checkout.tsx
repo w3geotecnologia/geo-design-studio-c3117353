@@ -262,9 +262,10 @@ const Checkout = () => {
       toast({ title: "Erro ao cadastrar", description: error.message, variant: "destructive" });
       return;
     }
-    if (data?.id) localStorage.setItem("cliente_id", String(data.id));
+    const novoId = data?.id ? String(data.id) : null;
+    if (novoId) localStorage.setItem("cliente_id", novoId);
     setShowQuickRegister(false);
-    concluirPedido();
+    await concluirPedido(novoId ?? undefined);
   };
 
   return (
