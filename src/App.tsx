@@ -13,6 +13,7 @@ import AdminLogin from "./pages/AdminLogin.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import AdminClientes from "./pages/AdminClientes.tsx";
 import AdminOrcamentos from "./pages/AdminOrcamentos.tsx";
+import AdminPedidos from "./pages/AdminPedidos.tsx";
 import AdminProdutos from "./pages/AdminProdutos.tsx";
 import AdminPlaceholder from "./pages/AdminPlaceholder.tsx";
 import NotFound from "./pages/NotFound.tsx";
