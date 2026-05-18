@@ -319,16 +319,17 @@ const AdminProdutos = () => {
               <TableHead>Nome</TableHead>
               <TableHead>Categoria</TableHead>
               <TableHead>Preço</TableHead>
+              <TableHead>Qtd.</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-16 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading && (
-              <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground">Carregando...</TableCell></TableRow>
+              <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground">Carregando...</TableCell></TableRow>
             )}
             {!loading && filtered.length === 0 && (
-              <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground">Nenhum produto cadastrado.</TableCell></TableRow>
+              <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground">Nenhum produto cadastrado.</TableCell></TableRow>
             )}
             {filtered.map((p) => (
               <TableRow key={p.id} className={selectedId === p.id ? "bg-secondary" : "cursor-pointer"} onClick={() => fillForm(p)}>
@@ -342,6 +343,7 @@ const AdminProdutos = () => {
                 <TableCell className="font-semibold">{p.nome}</TableCell>
                 <TableCell>{p.categoria}</TableCell>
                 <TableCell>{p.preco != null ? `R$ ${p.preco.toFixed(2)}` : "—"}</TableCell>
+                <TableCell>{p.estoque ?? 0}</TableCell>
                 <TableCell>
                   <span className={`text-xs font-semibold ${p.esgotado ? "text-destructive" : "text-primary"}`}>
                     {p.esgotado ? "Esgotado" : p.ativo ? "Ativo" : "Oculto"}

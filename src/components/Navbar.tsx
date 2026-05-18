@@ -34,14 +34,14 @@ const Navbar = () => {
   return (
     <>
       <header className="bg-background shadow-sm sticky top-0 z-50">
-        <div className="container flex items-center justify-between py-2">
+        <div className="container flex items-center py-2">
           {/* Logo */}
-          <a href="/" className="flex items-center">
+          <a href="/" className="flex items-center flex-1">
             <img src={logo} alt="W3 Geo-Tecnologias" className="h-14 md:h-16 w-auto" />
           </a>
 
           {/* Search */}
-          <div className="hidden md:flex items-center bg-secondary rounded-lg px-4 py-2 w-80">
+          <div className="hidden md:flex items-center bg-secondary rounded-lg px-4 py-2 w-80 mx-4">
             <input
               type="text"
               placeholder="Buscar produtos ou serviços..."
@@ -51,7 +51,7 @@ const Navbar = () => {
           </div>
 
           {/* Right side */}
-          <div className="hidden md:flex items-center gap-4 ml-auto">
+          <div className="hidden md:flex items-center gap-4 flex-1 justify-end">
             <div className="flex items-center gap-2 text-sm">
               <button
                 type="button"
