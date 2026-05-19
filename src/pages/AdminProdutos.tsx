@@ -74,6 +74,7 @@ const AdminProdutos = () => {
   const [form, setForm] = useState<FormState>(emptyForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isEditing = Boolean(selectedId);
 
