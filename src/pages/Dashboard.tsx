@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { ClipboardList, Package, Users, Wrench } from "lucide-react";
+import { ClipboardList, Package, ShoppingCart, Users, Wrench } from "lucide-react";
 import AdminLayout from "@/components/AdminLayout";
 
 const cards = [
   { label: "Cadastro Clientes", href: "/dashboard/clientes", icon: Users },
   { label: "Orçamentos", href: "/dashboard/orcamentos", icon: ClipboardList },
+  { label: "Pedidos", href: "/dashboard/pedidos", icon: ShoppingCart },
   { label: "Produtos", href: "/dashboard/produtos", icon: Package },
   { label: "Serviços", href: "/dashboard/servicos", icon: Wrench },
 ];
