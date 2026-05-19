@@ -80,6 +80,7 @@ const AdminProdutos = () => {
 
   const fillForm = (produto: Produto) => {
     setSelectedId(produto.id);
+    setShowForm(true);
     setForm({
       nome: produto.nome ?? "",
       categoria: produto.categoria ?? "",
@@ -97,6 +98,7 @@ const AdminProdutos = () => {
 
   const resetForm = () => {
     setSelectedId(null);
+    setShowForm(false);
     setForm(emptyForm);
   };
 
