@@ -218,78 +218,67 @@ const AdminProdutos = () => {
 
   return (
     <AdminLayout title="Cadastro Produtos">
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Coluna principal: tabela de produtos */}
-        <section className="lg:col-span-2 rounded-lg border border-border bg-card p-4 shadow-sm">
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="font-heading text-lg font-bold">Produtos cadastrados ({filtered.length})</h2>
+      <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="font-heading text-lg font-bold">Produtos cadastrados ({filtered.length})</h2>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Pesquisar produto..." className="sm:max-w-xs" />
+            <Button onClick={() => { setSelectedId(null); setForm(emptyForm); setShowForm(true); }} className="font-semibold">
+              <Plus className="mr-2 h-4 w-4" /> Novo Produto
+            </Button>
           </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-16">Imagem</TableHead>
-                <TableHead>Nome</TableHead>
-                <TableHead>Categoria</TableHead>
-                <TableHead>Preço</TableHead>
-                <TableHead>Qtd.</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-16 text-right">Ações</TableHead>
+        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-16">Imagem</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>Categoria</TableHead>
+              <TableHead>Preço</TableHead>
+              <TableHead>Qtd.</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="w-16 text-right">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loading && (
+              <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground">Carregando...</TableCell></TableRow>
+            )}
+            {!loading && filtered.length === 0 && (
+              <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground">Nenhum produto cadastrado.</TableCell></TableRow>
+            )}
+            {filtered.map((p) => (
+              <TableRow key={p.id} className={selectedId === p.id ? "bg-secondary" : "cursor-pointer"} onClick={() => fillForm(p)}>
+                <TableCell>
+                  {p.imagem_url ? (
+                    <img src={p.imagem_url} alt={p.nome ?? ""} className="h-10 w-10 rounded object-contain bg-white" />
+                  ) : (
+                    <div className="h-10 w-10 rounded bg-muted" />
+                  )}
+                </TableCell>
+                <TableCell className="font-semibold">{p.nome}</TableCell>
+                <TableCell>{p.categoria}</TableCell>
+                <TableCell>{p.preco != null ? `R$ ${p.preco.toFixed(2)}` : "—"}</TableCell>
+                <TableCell>{p.estoque ?? 0}</TableCell>
+                <TableCell>
+                  <span className={`text-xs font-semibold ${p.esgotado ? "text-destructive" : "text-primary"}`}>
+                    {p.esgotado ? "Esgotado" : p.ativo ? "Ativo" : "Oculto"}
+                  </span>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button type="button" variant="ghost" size="icon" onClick={(e) => handleDelete(p, e)} className="text-destructive hover:bg-destructive/10 hover:text-destructive">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading && (
-                <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground">Carregando...</TableCell></TableRow>
-              )}
-              {!loading && filtered.length === 0 && (
-                <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground">Nenhum produto cadastrado.</TableCell></TableRow>
-              )}
-              {filtered.map((p) => (
-                <TableRow key={p.id} className={selectedId === p.id ? "bg-secondary" : "cursor-pointer"} onClick={() => fillForm(p)}>
-                  <TableCell>
-                    {p.imagem_url ? (
-                      <img src={p.imagem_url} alt={p.nome ?? ""} className="h-10 w-10 rounded object-contain bg-white" />
-                    ) : (
-                      <div className="h-10 w-10 rounded bg-muted" />
-                    )}
-                  </TableCell>
-                  <TableCell className="font-semibold">{p.nome}</TableCell>
-                  <TableCell>{p.categoria}</TableCell>
-                  <TableCell>{p.preco != null ? `R$ ${p.preco.toFixed(2)}` : "—"}</TableCell>
-                  <TableCell>{p.estoque ?? 0}</TableCell>
-                  <TableCell>
-                    <span className={`text-xs font-semibold ${p.esgotado ? "text-destructive" : "text-primary"}`}>
-                      {p.esgotado ? "Esgotado" : p.ativo ? "Ativo" : "Oculto"}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button type="button" variant="ghost" size="icon" onClick={(e) => handleDelete(p, e)} className="text-destructive hover:bg-destructive/10 hover:text-destructive">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </section>
+            ))}
+          </TableBody>
+        </Table>
+      </section>
 
-        {/* Coluna lateral: banner de cadastro ou formulário */}
-        <aside className="rounded-lg border border-border bg-card p-6 shadow-sm">
-          {!showForm ? (
-            <div className="flex flex-col items-center justify-center gap-4 py-8 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                <Plus className="h-8 w-8 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-heading text-base font-bold">Cadastrar Produto</h3>
-                <p className="text-sm text-muted-foreground">Adicione um novo produto ao catálogo.</p>
-              </div>
-              <Button onClick={() => { setSelectedId(null); setForm(emptyForm); setShowForm(true); }} className="w-full font-semibold">
-                <Plus className="mr-2 h-4 w-4" />
-                Novo Produto
-              </Button>
-            </div>
-          ) : (
+      {showForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={resetForm}>
+          <aside className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-border bg-card p-6 shadow-lg" onClick={(e) => e.stopPropagation()}>
             <form onSubmit={handleSubmit}>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="font-heading text-base font-bold">
@@ -300,16 +289,16 @@ const AdminProdutos = () => {
                 </Button>
               </div>
 
-              <div className="grid gap-4">
-                <div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2">
                   <Label htmlFor="nome">Nome do produto *</Label>
                   <Input id="nome" name="nome" value={form.nome} onChange={handleChange} required />
                 </div>
-                <div>
+                <div className="sm:col-span-2">
                   <Label htmlFor="categoria">Categoria</Label>
                   <Input id="categoria" name="categoria" value={form.categoria} onChange={handleChange} placeholder="Ex.: Receptores, Acessórios" />
                 </div>
-                <div>
+                <div className="sm:col-span-2">
                   <Label htmlFor="imagem_url">Imagem do produto</Label>
                   <div className="flex flex-col gap-2 sm:flex-row">
                     <Input
@@ -357,11 +346,11 @@ const AdminProdutos = () => {
                   <Label htmlFor="qtde_minima">Quantidade mínima</Label>
                   <Input id="qtde_minima" name="qtde_minima" type="number" min="0" value={form.qtde_minima} onChange={handleChange} placeholder="0" />
                 </div>
-                <div>
+                <div className="sm:col-span-2">
                   <Label htmlFor="link_externo">Link externo (opcional)</Label>
                   <Input id="link_externo" name="link_externo" value={form.link_externo} onChange={handleChange} placeholder="https://..." />
                 </div>
-                <div>
+                <div className="sm:col-span-2">
                   <Label htmlFor="descricao">Descrição</Label>
                   <Textarea id="descricao" name="descricao" value={form.descricao} onChange={handleChange} rows={3} />
                 </div>
@@ -379,9 +368,9 @@ const AdminProdutos = () => {
                 {saving ? "Salvando..." : isEditing ? "Salvar Alteração" : "Cadastrar Produto"}
               </Button>
             </form>
-          )}
-        </aside>
-      </div>
+          </aside>
+        </div>
+      )}
     </AdminLayout>
   );
 };
