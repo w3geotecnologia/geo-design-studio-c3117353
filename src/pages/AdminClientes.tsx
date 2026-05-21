@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -42,9 +42,12 @@ const AdminClientes = () => {
   const [form, setForm] = useState(emptyForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const isEditing = Boolean(selectedId);
 
   const fillForm = (cliente: Cliente) => {
     setSelectedId(cliente.id);
+    setShowForm(true);
     setForm({
       nome: cliente.nome ?? "",
       endereco: cliente.endereco ?? "",
@@ -59,6 +62,12 @@ const AdminClientes = () => {
     });
   };
 
+  const resetForm = () => {
+    setSelectedId(null);
+    setShowForm(false);
+    setForm(emptyForm);
+  };
+
   const loadClientes = async () => {
     setLoading(true);
     const { data, error } = await supabase
@@ -71,10 +80,7 @@ const AdminClientes = () => {
       toast({ title: "Erro ao carregar clientes", description: error.message, variant: "destructive" });
       return;
     }
-
-    const rows = data ?? [];
-    setClientes(rows);
-    if (rows.length > 0) fillForm(rows[0]);
+    setClientes(data ?? []);
   };
 
   useEffect(() => {
@@ -97,18 +103,24 @@ const AdminClientes = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!selectedId) return;
-
+    if (!form.nome.trim()) {
+      toast({ title: "Informe o nome do cliente", variant: "destructive" });
+      return;
+    }
     setSaving(true);
-    const { error } = await supabase.from("cadastro_clientes").update(form).eq("id", selectedId);
+    const query = selectedId
+      ? supabase.from("cadastro_clientes").update(form).eq("id", selectedId)
+      : supabase.from("cadastro_clientes").insert(form);
+    const { error } = await query;
     setSaving(false);
 
     if (error) {
-      toast({ title: "Erro ao alterar cliente", description: error.message, variant: "destructive" });
+      toast({ title: "Erro ao salvar cliente", description: error.message, variant: "destructive" });
       return;
     }
 
-    toast({ title: "Cliente alterado com sucesso" });
+    toast({ title: selectedId ? "Cliente alterado com sucesso" : "Cliente cadastrado com sucesso" });
+    resetForm();
     await loadClientes();
   };
 
@@ -124,85 +136,21 @@ const AdminClientes = () => {
     }
 
     toast({ title: "Cliente removido com sucesso" });
-    if (selectedId === cliente.id) {
-      setSelectedId(null);
-      setForm(emptyForm);
-    }
+    if (selectedId === cliente.id) resetForm();
     await loadClientes();
   };
 
   return (
     <AdminLayout title="Cadastro Clientes">
-      <form onSubmit={handleSubmit} className="mb-6 rounded-lg border border-border bg-card p-6 shadow-sm">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-heading text-lg font-bold">
-            {selectedId ? "Alterar dados do cliente" : "Selecione um cliente abaixo para alterar"}
-          </h2>
-          {selectedId && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setSelectedId(null);
-                setForm(emptyForm);
-              }}
-            >
-              Cancelar edição
-            </Button>
-          )}
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="md:col-span-2">
-            <Label htmlFor="nome">Nome Completo</Label>
-            <Input id="nome" name="nome" value={form.nome} onChange={handleChange} disabled={!selectedId} />
-          </div>
-          <div>
-            <Label htmlFor="documento">CPF ou CNPJ</Label>
-            <Input id="documento" name="documento" value={form.documento} onChange={handleChange} disabled={!selectedId} />
-          </div>
-          <div>
-            <Label htmlFor="telefone">Telefone</Label>
-            <Input id="telefone" name="telefone" value={form.telefone} onChange={handleChange} disabled={!selectedId} />
-          </div>
-          <div>
-            <Label htmlFor="cep">CEP</Label>
-            <Input id="cep" name="cep" value={form.cep} onChange={handleChange} disabled={!selectedId} />
-          </div>
-          <div>
-            <Label htmlFor="endereco">Endereço</Label>
-            <Input id="endereco" name="endereco" value={form.endereco} onChange={handleChange} disabled={!selectedId} />
-          </div>
-          <div>
-            <Label htmlFor="numero">Número</Label>
-            <Input id="numero" name="numero" value={form.numero} onChange={handleChange} disabled={!selectedId} />
-          </div>
-          <div>
-            <Label htmlFor="bairro">Bairro</Label>
-            <Input id="bairro" name="bairro" value={form.bairro} onChange={handleChange} disabled={!selectedId} />
-          </div>
-          <div>
-            <Label htmlFor="cidade">Cidade</Label>
-            <Input id="cidade" name="cidade" value={form.cidade} onChange={handleChange} disabled={!selectedId} />
-          </div>
-          <div>
-            <Label htmlFor="estado">Estado</Label>
-            <Input id="estado" name="estado" value={form.estado} onChange={handleChange} disabled={!selectedId} />
-          </div>
-          <div className="md:col-span-2">
-            <Label htmlFor="email">E-mail</Label>
-            <Input id="email" name="email" type="email" value={form.email} onChange={handleChange} disabled={!selectedId} />
-          </div>
-        </div>
-        <Button type="submit" disabled={saving || loading || !selectedId} className="mt-6 font-semibold">
-          {saving ? "Salvando..." : "Salvar Alteração"}
-        </Button>
-      </form>
-
       <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="font-heading text-lg font-bold">Clientes cadastrados</h2>
-          <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Pesquisar cliente..." className="sm:max-w-xs" />
+          <h2 className="font-heading text-lg font-bold">Clientes cadastrados ({filteredClientes.length})</h2>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Pesquisar cliente..." className="sm:max-w-xs" />
+            <Button onClick={() => { setSelectedId(null); setForm(emptyForm); setShowForm(true); }} className="font-semibold">
+              <Plus className="mr-2 h-4 w-4" /> Novo Cliente
+            </Button>
+          </div>
         </div>
         <Table>
           <TableHeader>
@@ -215,6 +163,12 @@ const AdminClientes = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {loading && (
+              <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground">Carregando...</TableCell></TableRow>
+            )}
+            {!loading && filteredClientes.length === 0 && (
+              <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground">Nenhum cliente cadastrado.</TableCell></TableRow>
+            )}
             {filteredClientes.map((cliente) => (
               <TableRow key={cliente.id} className={selectedId === cliente.id ? "bg-secondary" : "cursor-pointer"} onClick={() => fillForm(cliente)}>
                 <TableCell className="font-semibold">{cliente.nome}</TableCell>
@@ -238,6 +192,68 @@ const AdminClientes = () => {
           </TableBody>
         </Table>
       </section>
+
+      {showForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={resetForm}>
+          <aside className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-border bg-card p-6 shadow-lg" onClick={(e) => e.stopPropagation()}>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="font-heading text-base font-bold">
+                  {isEditing ? "Alterar cliente" : "Cadastrar cliente"}
+                </h2>
+                <Button type="button" variant="outline" size="sm" onClick={resetForm}>
+                  <X className="mr-1 h-4 w-4" /> Fechar
+                </Button>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="md:col-span-2">
+                  <Label htmlFor="nome">Nome Completo *</Label>
+                  <Input id="nome" name="nome" value={form.nome} onChange={handleChange} required />
+                </div>
+                <div>
+                  <Label htmlFor="documento">CPF ou CNPJ</Label>
+                  <Input id="documento" name="documento" value={form.documento} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="telefone">Telefone</Label>
+                  <Input id="telefone" name="telefone" value={form.telefone} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="cep">CEP</Label>
+                  <Input id="cep" name="cep" value={form.cep} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="endereco">Endereço</Label>
+                  <Input id="endereco" name="endereco" value={form.endereco} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="numero">Número</Label>
+                  <Input id="numero" name="numero" value={form.numero} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="bairro">Bairro</Label>
+                  <Input id="bairro" name="bairro" value={form.bairro} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="cidade">Cidade</Label>
+                  <Input id="cidade" name="cidade" value={form.cidade} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="estado">Estado</Label>
+                  <Input id="estado" name="estado" value={form.estado} onChange={handleChange} />
+                </div>
+                <div className="md:col-span-2">
+                  <Label htmlFor="email">E-mail</Label>
+                  <Input id="email" name="email" type="email" value={form.email} onChange={handleChange} />
+                </div>
+              </div>
+              <Button type="submit" disabled={saving} className="mt-6 w-full font-semibold">
+                {saving ? "Salvando..." : isEditing ? "Salvar Alteração" : "Cadastrar Cliente"}
+              </Button>
+            </form>
+          </aside>
+        </div>
+      )}
     </AdminLayout>
   );
 };
