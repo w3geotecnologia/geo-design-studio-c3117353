@@ -16,6 +16,7 @@ import AdminOrcamentos from "./pages/AdminOrcamentos.tsx";
 import AdminPedidos from "./pages/AdminPedidos.tsx";
 import AdminProdutos from "./pages/AdminProdutos.tsx";
 import AdminContato from "./pages/AdminContato.tsx";
+import AdminMensagens from "./pages/AdminMensagens.tsx";
 import AdminPlaceholder from "./pages/AdminPlaceholder.tsx";
 import NotFound from "./pages/NotFound.tsx";
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/dashboard/pedidos" element={<ProtectedAdminRoute><AdminPedidos /></ProtectedAdminRoute>} />
             <Route path="/dashboard/produtos" element={<ProtectedAdminRoute><AdminProdutos /></ProtectedAdminRoute>} />
             <Route path="/dashboard/contato" element={<ProtectedAdminRoute><AdminContato /></ProtectedAdminRoute>} />
+            <Route path="/dashboard/contato/mensagens" element={<ProtectedAdminRoute><AdminMensagens /></ProtectedAdminRoute>} />
             <Route path="/dashboard/servicos" element={<ProtectedAdminRoute><AdminPlaceholder title="Serviços" /></ProtectedAdminRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
