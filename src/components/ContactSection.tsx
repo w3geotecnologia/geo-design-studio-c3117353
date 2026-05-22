@@ -34,7 +34,7 @@ const ContactSection = () => {
     }
     setSending(true);
     try {
-      await enviarMensagem(parsed.data);
+      await enviarMensagem(parsed.data as { nome: string; email: string; mensagem: string });
       toast({ title: "Mensagem enviada!", description: "Em breve entraremos em contato." });
       setForm({ nome: "", email: "", mensagem: "" });
     } catch (err: any) {

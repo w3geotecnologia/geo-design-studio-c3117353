@@ -1,15 +1,20 @@
-import { ClipboardList, FileText, LogOut, Package, Phone, ShoppingCart, Users, Wrench } from "lucide-react";
+import { ClipboardList, FileText, LogOut, Mail, Package, Phone, ShoppingCart, Users, Wrench } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 
-const menuItems = [
+type MenuItem = { label: string; href: string; icon: typeof Users; children?: { label: string; href: string; icon: typeof Users }[] };
+
+const menuItems: MenuItem[] = [
   { label: "Cadastro Clientes", href: "/dashboard/clientes", icon: Users },
   { label: "Orçamentos", href: "/dashboard/orcamentos", icon: ClipboardList },
   { label: "Pedidos", href: "/dashboard/pedidos", icon: ShoppingCart },
   { label: "Produtos", href: "/dashboard/produtos", icon: Package },
   { label: "Serviços", href: "/dashboard/servicos", icon: Wrench },
-  { label: "Contato", href: "/dashboard/contato", icon: Phone },
+  {
+    label: "Contato", href: "/dashboard/contato", icon: Phone,
+    children: [{ label: "Mensagens", href: "/dashboard/contato/mensagens", icon: Mail }],
+  },
 ];
 
 const AdminLayout = ({ title, children }: { title: string; children: React.ReactNode }) => {
