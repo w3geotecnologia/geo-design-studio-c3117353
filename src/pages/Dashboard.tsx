@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ClipboardList, Package, ShoppingCart, Users, Wrench } from "lucide-react";
+import { ClipboardList, Package, Phone, ShoppingCart, Users, Wrench } from "lucide-react";
 import AdminLayout from "@/components/AdminLayout";
 
 const cards = [
@@ -8,6 +8,7 @@ const cards = [
   { label: "Pedidos", href: "/dashboard/pedidos", icon: ShoppingCart },
   { label: "Produtos", href: "/dashboard/produtos", icon: Package },
   { label: "Serviços", href: "/dashboard/servicos", icon: Wrench },
+  { label: "Contato", href: "/dashboard/contato", icon: Phone },
 ];
 
 const Dashboard = () => (
