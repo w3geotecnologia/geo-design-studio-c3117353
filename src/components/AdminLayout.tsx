@@ -38,14 +38,32 @@ const AdminLayout = ({ title, children }: { title: string; children: React.React
             {menuItems.map((item) => {
               const active = location.pathname === item.href;
               return (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors ${active ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-secondary"}`}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
+                <div key={item.href}>
+                  <Link
+                    to={item.href}
+                    className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition-colors ${active ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-secondary"}`}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {item.label}
+                  </Link>
+                  {item.children && (
+                    <div className="ml-6 mt-1 space-y-1">
+                      {item.children.map((c) => {
+                        const cActive = location.pathname === c.href;
+                        return (
+                          <Link
+                            key={c.href}
+                            to={c.href}
+                            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${cActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary"}`}
+                          >
+                            <c.icon className="h-3.5 w-3.5" />
+                            {c.label}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </nav>
