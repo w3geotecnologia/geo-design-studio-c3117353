@@ -37,3 +37,6 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget -qO- http://localhost/ >/dev/null || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
+RUN npm run build
+# Verifica se o dist foi gerado
+RUN ls -la /app/dist && test -f /app/dist/index.html || (echo "BUILD FALHOU: dist vazio" && exit 1)
