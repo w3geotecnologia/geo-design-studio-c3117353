@@ -1,9 +1,23 @@
+import { Trash2 } from "lucide-react";
 import AdminLayout from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
-import { useContatoMensagens } from "@/hooks/useContatoMensagens";
+import { excluirMensagem, useContatoMensagens, type ContatoMensagem } from "@/hooks/useContatoMensagens";
+import { toast } from "@/hooks/use-toast";
 
 const AdminMensagens = () => {
   const { mensagens, loading, error, reload } = useContatoMensagens();
+
+  const handleDelete = async (m: ContatoMensagem) => {
+    if (!m.id) return;
+    if (!window.confirm(`Excluir mensagem de "${m.nome}"?`)) return;
+    try {
+      await excluirMensagem(m.id);
+      toast({ title: "Mensagem excluída" });
+      await reload();
+    } catch (e: any) {
+      toast({ title: "Erro ao excluir", description: e?.message, variant: "destructive" });
+    }
+  };
 
   return (
     <AdminLayout title="Mensagens de Contato">
@@ -29,6 +43,7 @@ const AdminMensagens = () => {
                   <th className="px-3 py-2 font-semibold">Nome</th>
                   <th className="px-3 py-2 font-semibold">E-mail</th>
                   <th className="px-3 py-2 font-semibold">Mensagem</th>
+                  <th className="w-16 px-3 py-2 text-right font-semibold">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -42,6 +57,18 @@ const AdminMensagens = () => {
                       <a href={`mailto:${m.email}`} className="text-primary hover:underline">{m.email}</a>
                     </td>
                     <td className="px-3 py-2 whitespace-pre-wrap">{m.mensagem}</td>
+                    <td className="px-3 py-2 text-right">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(m)}
+                        aria-label={`Excluir mensagem de ${m.nome}`}
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

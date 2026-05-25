@@ -27,6 +27,11 @@ export const listarMensagens = async (): Promise<ContatoMensagem[]> => {
   return (data ?? []) as ContatoMensagem[];
 };
 
+export const excluirMensagem = async (id: string) => {
+  const { error } = await supabase.from("site_contato_mensagens").delete().eq("id", id);
+  if (error) throw error;
+};
+
 export const useContatoMensagens = () => {
   const [mensagens, setMensagens] = useState<ContatoMensagem[]>([]);
   const [loading, setLoading] = useState(true);
