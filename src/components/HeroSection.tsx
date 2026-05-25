@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import heroImg from "@/assets/hero-banner.png";
 
 const HeroSection = () => (
-  <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-primary-darker min-h-[600px] flex items-center">
+  <section className="relative overflow-hidden bg-primary-darker min-h-[600px] flex items-center">
     {/* Background image */}
     <div className="absolute inset-0">
       <img
@@ -15,11 +15,12 @@ const HeroSection = () => (
         height={600}
         loading="eager"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary-darker/85 via-primary-darker/50 to-transparent" />
+      <div className="absolute inset-0 bg-primary-darker/35" />
     </div>
 
     <div className="container relative z-10 py-20">
-      <div className="max-w-2xl">
+      <div className="max-w-3xl mx-auto text-center">
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
