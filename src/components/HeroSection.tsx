@@ -52,9 +52,8 @@ const HeroSection = () => (
         </motion.p>
 
       </div>
-
-      </div>
     </div>
+
   </section>
 );
 
