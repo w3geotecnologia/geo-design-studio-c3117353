@@ -46,7 +46,7 @@ const HeroSection = () => (
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-primary-foreground/85 text-lg md:text-xl leading-relaxed mb-10 max-w-xl"
+          className="text-primary-foreground text-lg md:text-xl leading-relaxed mb-10 mx-auto max-w-2xl [text-shadow:_0_2px_8px_rgb(0_0_0_/_75%)]"
         >
           Assistência técnica especializada em GPS, GNSS, estações totais e drones. Produtos, acessórios e serviços com a credibilidade de quem entende do assunto.
         </motion.p>
