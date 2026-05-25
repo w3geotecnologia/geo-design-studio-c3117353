@@ -10,12 +10,12 @@ const HeroSection = () => (
       <img
         src={heroImg}
         alt="Equipamentos de geotecnologia - GPS, GNSS, estações totais e drones"
-        className="w-full h-full object-cover object-center opacity-60"
+        className="w-full h-full object-cover object-center"
         width={1920}
         height={600}
         loading="eager"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary-darker/90 via-primary-dark/70 to-primary-darker/40" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-darker/85 via-primary-darker/50 to-transparent" />
     </div>
 
     <div className="container relative z-10 py-20">
