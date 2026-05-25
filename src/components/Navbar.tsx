@@ -90,6 +90,13 @@ const Navbar = () => {
               <a
                 key={link.label}
                 href={link.href}
+                onClick={(e) => {
+                  if (link.label === "Contato") {
+                    setTimeout(() => {
+                      document.getElementById("contato-nome")?.focus({ preventScroll: false });
+                    }, 400);
+                  }
+                }}
                 className="text-primary-foreground font-heading font-semibold text-sm hover:opacity-80 transition-opacity"
               >
                 {link.label}
