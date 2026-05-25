@@ -109,7 +109,17 @@ const Navbar = () => {
         {mobileOpen && (
           <div className="md:hidden bg-background border-t border-border px-6 py-4 space-y-3">
             {navLinks.map((link) => (
-              <a key={link.label} href={link.href} className="block text-foreground font-semibold py-2" onClick={() => setMobileOpen(false)}>
+              <a
+                key={link.label}
+                href={link.href}
+                className="block text-foreground font-semibold py-2"
+                onClick={() => {
+                  setMobileOpen(false);
+                  if (link.label === "Contato") {
+                    setTimeout(() => document.getElementById("contato-nome")?.focus(), 400);
+                  }
+                }}
+              >
                 {link.label}
               </a>
             ))}
