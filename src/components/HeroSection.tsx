@@ -35,7 +35,7 @@ const HeroSection = () => (
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl md:text-6xl font-extrabold leading-tight mb-6"
+          className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 [text-shadow:_0_2px_12px_rgb(0_0_0_/_70%)]"
         >
           <span className="text-primary-foreground">Tecnologia de </span>
           <span className="text-gradient">Precisão</span>
