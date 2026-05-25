@@ -74,6 +74,7 @@ const ContactSection = () => {
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-1">Nome</label>
                 <input
+                  id="contato-nome"
                   value={form.nome}
                   onChange={(e) => setForm({ ...form, nome: e.target.value })}
                   maxLength={100}

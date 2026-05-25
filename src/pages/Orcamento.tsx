@@ -61,7 +61,7 @@ const Orcamento = () => {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <Label htmlFor="nome">Nome Completo *</Label>
-              <Input name="nome" value={form.nome} onChange={handleChange} placeholder="Seu nome" required />
+              <Input id="nome" name="nome" value={form.nome} onChange={handleChange} placeholder="Seu nome" required autoFocus />
             </div>
             <div>
               <Label htmlFor="empresa">Empresa</Label>
