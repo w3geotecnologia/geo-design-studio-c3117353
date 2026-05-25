@@ -25,7 +25,7 @@ const HeroSection = () => (
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 rounded-full px-5 py-2 mb-8"
+          className="inline-flex items-center gap-2 bg-primary-darker/60 backdrop-blur-sm border border-primary-foreground/30 rounded-full px-5 py-2 mb-8"
         >
           <Wrench className="w-4 h-4 text-accent" />
           <span className="text-primary-foreground text-sm font-medium">+20 anos de experiência</span>
