@@ -1,14 +1,21 @@
 import { ArrowRight, Wrench } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import heroImg from "@/assets/hero-equipment.jpg";
+import heroImg from "@/assets/hero-banner.png";
 
 const HeroSection = () => (
   <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-primary-darker min-h-[600px] flex items-center">
     {/* Background image */}
     <div className="absolute inset-0">
-      <img src={heroImg} alt="Equipamentos de geotecnologia" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" width={1920} height={1080} />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary-darker/95 via-primary-dark/80 to-transparent" />
+      <img
+        src={heroImg}
+        alt="Equipamentos de geotecnologia - GPS, GNSS, estações totais e drones"
+        className="w-full h-full object-cover object-center opacity-60"
+        width={1920}
+        height={600}
+        loading="eager"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-darker/90 via-primary-dark/70 to-primary-darker/40" />
     </div>
 
     <div className="container relative z-10 py-20">
