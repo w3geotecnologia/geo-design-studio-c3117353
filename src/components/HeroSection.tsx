@@ -51,19 +51,8 @@ const HeroSection = () => (
           Assistência técnica especializada em GPS, GNSS, estações totais e drones. Produtos, acessórios e serviços com a credibilidade de quem entende do assunto.
         </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-wrap gap-4 justify-center"
-        >
-          <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-bold text-base px-8 py-6 rounded-lg shadow-lg">
-            Obtenha um Orçamento <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
-          <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-bold text-base px-8 py-6 rounded-lg">
-            <Wrench className="mr-2 w-5 h-5" /> Nossos Serviços
-          </Button>
-        </motion.div>
+      </div>
+
       </div>
     </div>
   </section>
