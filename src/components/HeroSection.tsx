@@ -1,17 +1,16 @@
 import heroImg from "@/assets/hero-banner.png";
 
 const HeroSection = () => (
-  <section className="bg-background">
-    <div className="container py-4 md:py-6">
-      <img
-        src={heroImg}
-        alt="W3 GeoTecnologias - Tecnologia de Precisão em equipamentos de geotecnologia"
-        className="w-full h-auto block rounded-md"
-        width={1254}
-        height={391}
-        loading="eager"
-      />
-    </div>
+  <section
+    className="relative w-full overflow-hidden bg-background"
+    aria-label="W3 GeoTecnologias - Tecnologia de Precisão em equipamentos de geotecnologia"
+  >
+    <div
+      className="h-[clamp(260px,31vw,430px)] w-full bg-cover bg-center bg-no-repeat sm:h-[clamp(300px,31vw,430px)]"
+      style={{ backgroundImage: `url(${heroImg})` }}
+      role="img"
+      aria-label="Banner W3 GeoTecnologias"
+    />
   </section>
 );
 
