@@ -2,11 +2,11 @@ import heroImg from "@/assets/hero-banner.png";
 
 const HeroSection = () => (
   <section className="bg-background">
-    <div className="container py-6">
+    <div className="container py-4 md:py-6">
       <img
         src={heroImg}
         alt="W3 GeoTecnologias - Tecnologia de Precisão em equipamentos de geotecnologia"
-        className="w-full h-auto block"
+        className="w-full h-auto block rounded-md"
         width={1254}
         height={391}
         loading="eager"
