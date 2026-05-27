@@ -11,8 +11,14 @@ const Footer = () => (
         <div>
           <h4 className="font-heading font-bold mb-4">Links Rápidos</h4>
           <ul className="space-y-2 text-sm text-primary-foreground/70">
-            {["Início", "Serviços", "Produtos", "Contato", "Sobre"].map((l) => (
-              <li key={l}><a href={`#${l.toLowerCase()}`} className="hover:text-primary-foreground transition-colors">{l}</a></li>
+            {[
+              { label: "Início", href: "/" },
+              { label: "Serviços", href: "/#servicos" },
+              { label: "Produtos", href: "/#produtos" },
+              { label: "Contato", href: "/#contato" },
+              { label: "Sobre", href: "/sobre" },
+            ].map((l) => (
+              <li key={l.label}><a href={l.href} className="hover:text-primary-foreground transition-colors">{l.label}</a></li>
             ))}
           </ul>
         </div>

@@ -1,7 +1,9 @@
 import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Phone } from "lucide-react";
+import { Phone, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Sobre = () => (
   <div className="min-h-screen flex flex-col">
@@ -9,6 +11,9 @@ const Sobre = () => (
     <Navbar />
     <main className="flex-1 py-16">
       <div className="container max-w-4xl">
+        <Button asChild variant="outline" size="sm" className="mb-6">
+          <Link to="/"><ArrowLeft className="w-4 h-4 mr-2" /> Voltar ao site</Link>
+        </Button>
         <h1 className="font-heading text-4xl md:text-5xl font-extrabold text-foreground mb-8">
           Sobre a W3-Geotecnologia
         </h1>
@@ -42,6 +47,11 @@ const Sobre = () => (
             <Phone className="w-5 h-5 text-primary" />
             Entre em contato e descubra como podemos ajudar no sucesso do seu projeto.
           </p>
+        </div>
+        <div className="mt-10">
+          <Button asChild>
+            <Link to="/"><ArrowLeft className="w-4 h-4 mr-2" /> Voltar ao site</Link>
+          </Button>
         </div>
       </div>
     </main>
