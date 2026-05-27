@@ -11,7 +11,7 @@ const navLinks = [
   { label: "Produtos", href: "/#produtos" },
   { label: "Solicitar Orçamento", href: "/orcamento" },
   { label: "Contato", href: "/#contato" },
-  { label: "Sobre", href: "/#sobre" },
+  { label: "Sobre", href: "/sobre" },
 ];
 
 const Navbar = () => {

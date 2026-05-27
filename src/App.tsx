@@ -19,6 +19,7 @@ import AdminContato from "./pages/AdminContato.tsx";
 import AdminMensagens from "./pages/AdminMensagens.tsx";
 import AdminPlaceholder from "./pages/AdminPlaceholder.tsx";
 import AdminServicos from "./pages/AdminServicos.tsx";
+import Sobre from "./pages/Sobre.tsx";
 import NotFound from "./pages/NotFound.tsx";
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/cadastro" element={<Cadastro />} />
+            <Route path="/sobre" element={<Sobre />} />
             <Route path="/orcamento" element={<Orcamento />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/admin" element={<AdminLogin />} />
