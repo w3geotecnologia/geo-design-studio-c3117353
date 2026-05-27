@@ -11,6 +11,9 @@ const Sobre = () => (
     <Navbar />
     <main className="flex-1 py-16">
       <div className="container max-w-4xl">
+        <Button asChild variant="outline" size="sm" className="mb-6">
+          <Link to="/"><ArrowLeft className="w-4 h-4 mr-2" /> Voltar ao site</Link>
+        </Button>
         <h1 className="font-heading text-4xl md:text-5xl font-extrabold text-foreground mb-8">
           Sobre a W3-Geotecnologia
         </h1>
