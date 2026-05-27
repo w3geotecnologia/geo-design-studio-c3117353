@@ -4,4 +4,4 @@ Disallow: /admin
 Disallow: /dashboard
 Disallow: /checkout
 
-Sitemap: https://negociotopogafico.com.br/sitemap.xml
+Sitemap: https://negociotopografico.com.br/sitemap.xml
