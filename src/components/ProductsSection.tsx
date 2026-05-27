@@ -66,9 +66,13 @@ const ProductsSection = () => {
           <p className="text-center text-muted-foreground">
             Nenhum produto cadastrado no momento.
           </p>
+        ) : filtrados.length === 0 ? (
+          <p className="text-center text-muted-foreground">
+            Nenhum produto encontrado para a busca.
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {produtos.map((p, i) => {
+            {filtrados.map((p, i) => {
               const indisponivel = p.esgotado || (p.estoque ?? 0) <= 0;
               const action = indisponivel && p.link_externo ? (
                 <a href={p.link_externo} target="_blank" rel="noopener noreferrer">
