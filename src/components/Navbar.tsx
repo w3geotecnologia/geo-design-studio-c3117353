@@ -22,26 +22,33 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const { isAdmin, signOut } = useAdminAuth();
-  const { query, categoria } = useProductSearch();
-  const [categorias, setCategorias] = useState<string[]>([]);
+  const { query } = useProductSearch();
+  const [produtosNomes, setProdutosNomes] = useState<string[]>([]);
 
   useEffect(() => {
     (async () => {
       const { data } = await supabase
         .from("produtos")
-        .select("categoria")
+        .select("nome")
         .eq("ativo", true);
-      const unique = Array.from(
-        new Set((data ?? []).map((r: { categoria: string | null }) => r.categoria).filter((c): c is string => !!c))
-      ).sort();
-      setCategorias(unique);
+      setProdutosNomes(
+        (data ?? [])
+          .map((r: { nome: string | null }) => (r.nome ?? "").toLowerCase())
+          .filter(Boolean)
+      );
     })();
   }, []);
 
-  const scrollToProdutos = () => {
-    const el = document.getElementById("produtos");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+  const handleSearchChange = (value: string) => {
+    setProductSearch({ query: value });
+    const q = value.trim().toLowerCase();
+    if (!q) return;
+    const hasMatch = produtosNomes.some((n) => n.includes(q));
+    if (hasMatch) {
+      document.getElementById("produtos")?.scrollIntoView({ behavior: "smooth" });
+    }
   };
+
 
   const handleUserIconClick = () => {
     navigate(isAdmin ? "/dashboard" : "/admin");
@@ -60,9 +67,9 @@ const Navbar = () => {
   return (
     <>
       <header className="bg-background shadow-sm sticky top-0 z-50">
-        <div className="container flex items-center py-2">
+        <div className="container flex items-center gap-6 py-2">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3 flex-1">
+          <a href="/" className="flex items-center gap-3 shrink-0">
             <img src={logo} alt="W3 Geo-Tecnologias" className="h-14 md:h-16 w-auto" />
             <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-border">
               <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
@@ -77,42 +84,22 @@ const Navbar = () => {
             </div>
           </a>
 
-
           {/* Search produtos */}
-          <div className="hidden md:flex items-center gap-2 mx-4 flex-1 max-w-xl">
-            <div className="flex items-center bg-secondary rounded-lg px-3 py-2 flex-1">
-              <Search className="w-4 h-4 text-muted-foreground mr-2" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => {
-                  setProductSearch({ query: e.target.value });
-                  scrollToProdutos();
-                }}
-                placeholder="Buscar produto pelo nome..."
-                className="bg-transparent outline-none text-sm flex-1 text-foreground placeholder:text-muted-foreground"
-              />
-            </div>
-            <select
-              value={categoria}
-              onChange={(e) => {
-                setProductSearch({ categoria: e.target.value });
-                scrollToProdutos();
-              }}
-              className="bg-secondary rounded-lg px-3 py-2 text-sm text-foreground outline-none border-0 min-w-[160px]"
-              aria-label="Filtrar por categoria"
-            >
-              <option value="">Todas categorias</option>
-              {categorias.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
+          <div className="hidden md:flex items-center bg-secondary rounded-lg px-3 py-2 ml-auto w-72 lg:w-96">
+            <Search className="w-4 h-4 text-muted-foreground mr-2" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="Buscar produto pelo nome..."
+              className="bg-transparent outline-none text-sm flex-1 text-foreground placeholder:text-muted-foreground"
+            />
           </div>
 
-
           {/* Right side */}
-          <div className="hidden md:flex items-center gap-4 flex-1 justify-end">
+          <div className="hidden md:flex items-center gap-4 shrink-0">
             <div className="flex items-center gap-2 text-sm">
+
               <button
                 type="button"
                 onClick={handleUserIconClick}
