@@ -1,7 +1,9 @@
 import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Phone } from "lucide-react";
+import { Phone, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Sobre = () => (
   <div className="min-h-screen flex flex-col">
