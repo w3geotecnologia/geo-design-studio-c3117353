@@ -22,7 +22,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const { isAdmin, signOut } = useAdminAuth();
-  const { query, categoria } = useProductSearch();
+  const { query } = useProductSearch();
   const [produtosNomes, setProdutosNomes] = useState<string[]>([]);
 
   useEffect(() => {
