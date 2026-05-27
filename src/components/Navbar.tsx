@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, User, Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { setProductSearch, useProductSearch } from "@/hooks/useProductSearch";
+import { supabase } from "@/lib/supabase";
 import logo from "@/assets/logo.png";
 import parceiroLogo from "@/assets/parceiro-negociotopografico.jpeg";
+
 
 const navLinks = [
   { label: "Início", href: "/" },
