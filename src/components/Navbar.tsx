@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, User, Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { setProductSearch, useProductSearch } from "@/hooks/useProductSearch";
+import { supabase } from "@/lib/supabase";
 import logo from "@/assets/logo.png";
 import parceiroLogo from "@/assets/parceiro-negociotopografico.jpeg";
+
 
 const navLinks = [
   { label: "Início", href: "/" },
@@ -19,6 +22,26 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const { isAdmin, signOut } = useAdminAuth();
+  const { query, categoria } = useProductSearch();
+  const [categorias, setCategorias] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("produtos")
+        .select("categoria")
+        .eq("ativo", true);
+      const unique = Array.from(
+        new Set((data ?? []).map((r: { categoria: string | null }) => r.categoria).filter((c): c is string => !!c))
+      ).sort();
+      setCategorias(unique);
+    })();
+  }, []);
+
+  const scrollToProdutos = () => {
+    const el = document.getElementById("produtos");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
 
   const handleUserIconClick = () => {
     navigate(isAdmin ? "/dashboard" : "/admin");
@@ -32,6 +55,7 @@ const Navbar = () => {
     }
     window.close();
   };
+
 
   return (
     <>
@@ -48,20 +72,43 @@ const Navbar = () => {
                 src={parceiroLogo}
                 alt="Negócio Topográfico — Parceiro"
                 title="Parceria: Negócio Topográfico"
-                className="h-10 md:h-12 w-auto object-contain"
+                className="h-14 md:h-16 w-auto object-contain"
               />
             </div>
           </a>
 
-          {/* Search */}
-          <div className="hidden md:flex items-center bg-secondary rounded-lg px-4 py-2 w-80 mx-4">
-            <input
-              type="text"
-              placeholder="Buscar produtos ou serviços..."
-              className="bg-transparent outline-none text-sm flex-1 text-foreground placeholder:text-muted-foreground"
-            />
-            <Search className="w-4 h-4 text-muted-foreground" />
+
+          {/* Search produtos */}
+          <div className="hidden md:flex items-center gap-2 mx-4 flex-1 max-w-xl">
+            <div className="flex items-center bg-secondary rounded-lg px-3 py-2 flex-1">
+              <Search className="w-4 h-4 text-muted-foreground mr-2" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  setProductSearch({ query: e.target.value });
+                  scrollToProdutos();
+                }}
+                placeholder="Buscar produto pelo nome..."
+                className="bg-transparent outline-none text-sm flex-1 text-foreground placeholder:text-muted-foreground"
+              />
+            </div>
+            <select
+              value={categoria}
+              onChange={(e) => {
+                setProductSearch({ categoria: e.target.value });
+                scrollToProdutos();
+              }}
+              className="bg-secondary rounded-lg px-3 py-2 text-sm text-foreground outline-none border-0 min-w-[160px]"
+              aria-label="Filtrar por categoria"
+            >
+              <option value="">Todas categorias</option>
+              {categorias.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
           </div>
+
 
           {/* Right side */}
           <div className="hidden md:flex items-center gap-4 flex-1 justify-end">

@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { useProductSearch } from "@/hooks/useProductSearch";
+
 
 type Produto = {
   id: string;
@@ -22,6 +24,7 @@ const formatBRL = (value: number) =>
 const ProductsSection = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
+  const { query, categoria } = useProductSearch();
 
   useEffect(() => {
     (async () => {
@@ -34,6 +37,16 @@ const ProductsSection = () => {
       setLoading(false);
     })();
   }, []);
+
+  const filtrados = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return produtos.filter((p) => {
+      if (categoria && (p.categoria ?? "") !== categoria) return false;
+      if (q && !(p.nome ?? "").toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [produtos, query, categoria]);
+
 
   return (
     <section id="produtos" className="py-20 bg-background">
@@ -53,9 +66,13 @@ const ProductsSection = () => {
           <p className="text-center text-muted-foreground">
             Nenhum produto cadastrado no momento.
           </p>
+        ) : filtrados.length === 0 ? (
+          <p className="text-center text-muted-foreground">
+            Nenhum produto encontrado para a busca.
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {produtos.map((p, i) => {
+            {filtrados.map((p, i) => {
               const indisponivel = p.esgotado || (p.estoque ?? 0) <= 0;
               const action = indisponivel && p.link_externo ? (
                 <a href={p.link_externo} target="_blank" rel="noopener noreferrer">
