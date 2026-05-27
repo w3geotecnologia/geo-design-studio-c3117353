@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import logo from "@/assets/logo.png";
+import parceiroLogo from "@/assets/parceiro-negociotopografico.jpeg";
 
 const navLinks = [
   { label: "Início", href: "/" },
@@ -37,8 +38,19 @@ const Navbar = () => {
       <header className="bg-background shadow-sm sticky top-0 z-50">
         <div className="container flex items-center py-2">
           {/* Logo */}
-          <a href="/" className="flex items-center flex-1">
+          <a href="/" className="flex items-center gap-3 flex-1">
             <img src={logo} alt="W3 Geo-Tecnologias" className="h-14 md:h-16 w-auto" />
+            <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-border">
+              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+                Parceria
+              </span>
+              <img
+                src={parceiroLogo}
+                alt="Negócio Topográfico — Parceiro"
+                title="Parceria: Negócio Topográfico"
+                className="h-10 md:h-12 w-auto object-contain"
+              />
+            </div>
           </a>
 
           {/* Search */}
