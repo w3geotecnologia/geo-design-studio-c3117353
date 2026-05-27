@@ -48,6 +48,11 @@ const Sobre = () => (
             Entre em contato e descubra como podemos ajudar no sucesso do seu projeto.
           </p>
         </div>
+        <div className="mt-10">
+          <Button asChild>
+            <Link to="/"><ArrowLeft className="w-4 h-4 mr-2" /> Voltar ao site</Link>
+          </Button>
+        </div>
       </div>
     </main>
     <Footer />
