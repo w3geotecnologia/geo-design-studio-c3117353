@@ -78,15 +78,37 @@ const Navbar = () => {
           </a>
 
 
-          {/* Search */}
-          <div className="hidden md:flex items-center bg-secondary rounded-lg px-4 py-2 w-80 mx-4">
-            <input
-              type="text"
-              placeholder="Buscar produtos ou serviços..."
-              className="bg-transparent outline-none text-sm flex-1 text-foreground placeholder:text-muted-foreground"
-            />
-            <Search className="w-4 h-4 text-muted-foreground" />
+          {/* Search produtos */}
+          <div className="hidden md:flex items-center gap-2 mx-4 flex-1 max-w-xl">
+            <div className="flex items-center bg-secondary rounded-lg px-3 py-2 flex-1">
+              <Search className="w-4 h-4 text-muted-foreground mr-2" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  setProductSearch({ query: e.target.value });
+                  scrollToProdutos();
+                }}
+                placeholder="Buscar produto pelo nome..."
+                className="bg-transparent outline-none text-sm flex-1 text-foreground placeholder:text-muted-foreground"
+              />
+            </div>
+            <select
+              value={categoria}
+              onChange={(e) => {
+                setProductSearch({ categoria: e.target.value });
+                scrollToProdutos();
+              }}
+              className="bg-secondary rounded-lg px-3 py-2 text-sm text-foreground outline-none border-0 min-w-[160px]"
+              aria-label="Filtrar por categoria"
+            >
+              <option value="">Todas categorias</option>
+              {categorias.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
           </div>
+
 
           {/* Right side */}
           <div className="hidden md:flex items-center gap-4 flex-1 justify-end">

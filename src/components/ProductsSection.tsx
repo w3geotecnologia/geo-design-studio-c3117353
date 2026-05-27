@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { useProductSearch } from "@/hooks/useProductSearch";
+
 
 type Produto = {
   id: string;
@@ -22,6 +24,7 @@ const formatBRL = (value: number) =>
 const ProductsSection = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
+  const { query, categoria } = useProductSearch();
 
   useEffect(() => {
     (async () => {
@@ -34,6 +37,16 @@ const ProductsSection = () => {
       setLoading(false);
     })();
   }, []);
+
+  const filtrados = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return produtos.filter((p) => {
+      if (categoria && (p.categoria ?? "") !== categoria) return false;
+      if (q && !(p.nome ?? "").toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [produtos, query, categoria]);
+
 
   return (
     <section id="produtos" className="py-20 bg-background">
