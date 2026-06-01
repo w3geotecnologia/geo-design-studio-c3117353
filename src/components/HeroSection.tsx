@@ -11,9 +11,9 @@ const HeroSection = () => (
       role="img"
       aria-label="Banner W3 GeoTecnologias"
     />
-    <div className="bg-primary py-6 md:py-8">
-      <div className="container text-center">
-        <p className="text-primary-foreground text-lg md:text-xl lg:text-2xl font-heading font-bold leading-relaxed">
+    <div className="bg-background py-5 md:py-6">
+      <div className="container">
+        <p className="text-muted-foreground text-base md:text-lg leading-relaxed text-left">
           Mais de 20 anos oferecendo serviços e soluções em sistemas de geotecnologia com qualidade e precisão.
         </p>
       </div>
