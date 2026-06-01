@@ -131,9 +131,10 @@ const Navbar = () => {
                     }, 400);
                   }
                 }}
-                className="text-primary-foreground font-heading font-semibold text-sm hover:opacity-80 transition-opacity"
+                className="relative text-primary-foreground font-heading font-semibold text-sm transition-all duration-300 hover:text-white group"
               >
                 {link.label}
+                <span className="absolute -bottom-1 left-1/2 h-0.5 w-0 bg-white rounded-full transition-all duration-300 group-hover:w-full group-hover:left-0" />
               </a>
             ))}
           </div>
