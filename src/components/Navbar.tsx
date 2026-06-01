@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, User, Menu, X, LogOut } from "lucide-react";
+import { Search, Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
