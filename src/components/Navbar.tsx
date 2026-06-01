@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, User, Menu, X, LogOut } from "lucide-react";
+import { Search, Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
@@ -50,9 +50,6 @@ const Navbar = () => {
   };
 
 
-  const handleUserIconClick = () => {
-    navigate(isAdmin ? "/dashboard" : "/admin");
-  };
 
   const handleExit = async () => {
     if (isAdmin) {
@@ -79,7 +76,7 @@ const Navbar = () => {
                 src={parceiroLogo}
                 alt="Negócio Topográfico — Parceiro"
                 title="Parceria: Negócio Topográfico"
-                className="h-14 md:h-16 w-auto object-contain"
+                className="h-20 md:h-24 w-auto object-contain"
               />
             </div>
           </a>
@@ -99,16 +96,6 @@ const Navbar = () => {
           {/* Right side */}
           <div className="hidden md:flex items-center gap-4 shrink-0">
             <div className="flex items-center gap-2 text-sm">
-
-              <button
-                type="button"
-                onClick={handleUserIconClick}
-                aria-label={isAdmin ? "Abrir Dashboard" : "Entrar como administrador"}
-                title={isAdmin ? "Abrir Dashboard" : "Entrar como administrador"}
-                className="p-1.5 rounded-md hover:bg-secondary transition-colors"
-              >
-                <User className="w-5 h-5 text-muted-foreground" />
-              </button>
               <div className="leading-tight">
                 <p className="font-semibold text-foreground">Seja Bem Vindo</p>
               </div>

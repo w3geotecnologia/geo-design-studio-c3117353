@@ -1,9 +1,18 @@
-import { MapPin } from "lucide-react";
+import { MapPin, User } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useSiteContato } from "@/hooks/useSiteContato";
 
 const TopBar = () => {
   const c = useSiteContato();
+  const navigate = useNavigate();
+  const { isAdmin } = useAdminAuth();
+
+  const handleUserIconClick = () => {
+    navigate(isAdmin ? "/dashboard" : "/admin");
+  };
+
   return (
     <div className="bg-topbar py-2 text-primary-foreground text-sm">
       <div className="container flex items-center justify-between">
@@ -29,6 +38,15 @@ const TopBar = () => {
         <div className="flex items-center gap-2">
           <MapPin className="w-3.5 h-3.5" />
           <span>{c.cidade}</span>
+          <button
+            type="button"
+            onClick={handleUserIconClick}
+            aria-label={isAdmin ? "Abrir Dashboard" : "Entrar como administrador"}
+            title={isAdmin ? "Abrir Dashboard" : "Entrar como administrador"}
+            className="ml-1 p-1 rounded-md hover:bg-white/10 transition-colors"
+          >
+            <User className="w-4 h-4 text-primary-foreground" />
+          </button>
         </div>
       </div>
     </div>
