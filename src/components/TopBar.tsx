@@ -1,5 +1,7 @@
-import { MapPin } from "lucide-react";
+import { MapPin, User } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useSiteContato } from "@/hooks/useSiteContato";
 
 const TopBar = () => {
