@@ -50,9 +50,6 @@ const Navbar = () => {
   };
 
 
-  const handleUserIconClick = () => {
-    navigate(isAdmin ? "/dashboard" : "/admin");
-  };
 
   const handleExit = async () => {
     if (isAdmin) {
