@@ -15,13 +15,22 @@ const Footer = () => (
           className="h-12 w-auto object-contain"
         />
         <nav className="flex flex-wrap items-center justify-center gap-4 text-sm text-foreground/70">
-          <a href="/" className="hover:text-primary transition-colors">Início</a>
+          <a
+            href="#top"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="hover:text-primary transition-colors"
+          >
+            Início
+          </a>
           <span className="text-foreground/30">|</span>
           <a href="/sobre" className="hover:text-primary transition-colors">Sobre</a>
           <span className="text-foreground/30">|</span>
-          <a href="#" className="hover:text-primary transition-colors">Termos e condições</a>
+          <a href="/termos" className="hover:text-primary transition-colors">Termos e condições</a>
           <span className="text-foreground/30">|</span>
-          <a href="#" className="hover:text-primary transition-colors">Política de privacidade</a>
+          <a href="/privacidade" className="hover:text-primary transition-colors">Política de privacidade</a>
         </nav>
       </div>
     </div>
