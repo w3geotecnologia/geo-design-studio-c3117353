@@ -8,14 +8,13 @@ import { supabase } from "@/lib/supabase";
 import logo from "@/assets/logo.png";
 import parceiroLogo from "@/assets/parceiro-negociotopografico.jpeg";
 
-
 const navLinks = [
   { label: "Início", href: "/" },
   { label: "Serviços", href: "/#servicos" },
   { label: "Produtos", href: "/#produtos" },
   { label: "Solicitar Orçamento", href: "/orcamento" },
   { label: "Contato", href: "/#contato" },
-  { label: "Sobre", href: "/sobre" },
+  { label: "Localização", href: "/#footer" },
 ];
 
 const Navbar = () => {
