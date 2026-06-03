@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "@/hooks/use-toast";
 
 export type ContatoMensagem = {
   id?: string;
