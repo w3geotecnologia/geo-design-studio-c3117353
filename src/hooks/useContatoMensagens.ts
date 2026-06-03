@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "@/hooks/use-toast";
 
 export type ContatoMensagem = {
   id?: string;
@@ -49,8 +50,38 @@ export const useContatoMensagens = () => {
     }
   };
 
+  const isFirstLoad = useRef(true);
+
   useEffect(() => {
-    reload();
+    reload().then(() => {
+      isFirstLoad.current = false;
+    });
+
+    const channel = supabase
+      .channel("site_contato_mensagens_changes")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "site_contato_mensagens" },
+        (payload) => {
+          const nova = payload.new as ContatoMensagem;
+          setMensagens((prev) => {
+            if (prev.some((m) => m.id === nova.id)) return prev;
+            return [nova, ...prev];
+          });
+          if (!isFirstLoad.current) {
+            toast({
+              title: "Nova mensagem recebida",
+              description: `${nova.nome}: ${nova.mensagem?.slice(0, 80) ?? ""}`,
+              duration: 6000,
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   return { mensagens, loading, error, reload };
