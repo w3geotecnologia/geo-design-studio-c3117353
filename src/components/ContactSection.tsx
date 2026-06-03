@@ -70,6 +70,7 @@ const ContactSection = () => {
             </Button>
           </div>
           <div className="bg-card rounded-2xl shadow-lg p-8">
+            <h3 className="text-xl font-bold text-foreground mb-4">Envie uma mensagem direta</h3>
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-1">Nome</label>
