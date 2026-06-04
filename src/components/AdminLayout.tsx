@@ -1,4 +1,4 @@
-import { ClipboardList, FileText, LogOut, Mail, Package, Phone, ShoppingCart, Users, Wrench } from "lucide-react";
+import { ClipboardList, FileText, LogOut, Mail, Package, Phone, ShieldCheck, ShoppingCart, Users, Wrench } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
