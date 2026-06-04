@@ -20,6 +20,7 @@ import AdminContato from "./pages/AdminContato.tsx";
 import AdminMensagens from "./pages/AdminMensagens.tsx";
 import AdminPlaceholder from "./pages/AdminPlaceholder.tsx";
 import AdminServicos from "./pages/AdminServicos.tsx";
+import AdminAdministradores from "./pages/AdminAdministradores.tsx";
 import Sobre from "./pages/Sobre.tsx";
 import Termos from "./pages/Termos.tsx";
 import Privacidade from "./pages/Privacidade.tsx";
