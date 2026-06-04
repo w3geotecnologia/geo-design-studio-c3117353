@@ -52,6 +52,7 @@ const App = () => (
             <Route path="/dashboard/contato" element={<ProtectedAdminRoute><AdminContato /></ProtectedAdminRoute>} />
             <Route path="/dashboard/contato/mensagens" element={<ProtectedAdminRoute><AdminMensagens /></ProtectedAdminRoute>} />
             <Route path="/dashboard/servicos" element={<ProtectedAdminRoute><AdminServicos /></ProtectedAdminRoute>} />
+            <Route path="/dashboard/administradores" element={<ProtectedAdminRoute><AdminAdministradores /></ProtectedAdminRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
