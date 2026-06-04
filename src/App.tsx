@@ -20,6 +20,7 @@ import AdminContato from "./pages/AdminContato.tsx";
 import AdminMensagens from "./pages/AdminMensagens.tsx";
 import AdminPlaceholder from "./pages/AdminPlaceholder.tsx";
 import AdminServicos from "./pages/AdminServicos.tsx";
+import AdminAdministradores from "./pages/AdminAdministradores.tsx";
 import Sobre from "./pages/Sobre.tsx";
 import Termos from "./pages/Termos.tsx";
 import Privacidade from "./pages/Privacidade.tsx";
@@ -51,6 +52,7 @@ const App = () => (
             <Route path="/dashboard/contato" element={<ProtectedAdminRoute><AdminContato /></ProtectedAdminRoute>} />
             <Route path="/dashboard/contato/mensagens" element={<ProtectedAdminRoute><AdminMensagens /></ProtectedAdminRoute>} />
             <Route path="/dashboard/servicos" element={<ProtectedAdminRoute><AdminServicos /></ProtectedAdminRoute>} />
+            <Route path="/dashboard/administradores" element={<ProtectedAdminRoute><AdminAdministradores /></ProtectedAdminRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
