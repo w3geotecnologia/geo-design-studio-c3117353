@@ -15,6 +15,7 @@ const menuItems: MenuItem[] = [
     label: "Contato", href: "/dashboard/contato", icon: Phone,
     children: [{ label: "Mensagens", href: "/dashboard/contato/mensagens", icon: Mail }],
   },
+  { label: "Administrador", href: "/dashboard/administradores", icon: ShieldCheck },
 ];
 
 const AdminLayout = ({ title, children }: { title: string; children: React.ReactNode }) => {
