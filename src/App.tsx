@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AdminAuthProvider } from "@/hooks/useAdminAuth";
 import ProtectedAdminRoute from "@/components/ProtectedAdminRoute";
+import AdminMensagensNotifier from "@/components/AdminMensagensNotifier";
 import Index from "./pages/Index.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
 import Orcamento from "./pages/Orcamento.tsx";
@@ -31,6 +32,7 @@ const App = () => (
       <AdminAuthProvider>
         <Toaster />
         <Sonner />
+        <AdminMensagensNotifier />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
