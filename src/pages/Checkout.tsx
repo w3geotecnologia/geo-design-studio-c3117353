@@ -372,13 +372,6 @@ const Checkout = () => {
                                 {formatBRL((p.preco ?? 0) * item.qty)}
                               </strong>
                             </p>
-                            <a
-                              href={`#desc-${item.produtoId}`}
-                              className="text-sm text-primary hover:underline mt-1 self-start"
-                            >
-                              Ver descrição completa →
-                            </a>
-                          </div>
                         </div>
 
                         <div
