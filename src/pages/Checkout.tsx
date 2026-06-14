@@ -372,6 +372,7 @@ const Checkout = () => {
                                 {formatBRL((p.preco ?? 0) * item.qty)}
                               </strong>
                             </p>
+                          </div>
                         </div>
 
                         <div
