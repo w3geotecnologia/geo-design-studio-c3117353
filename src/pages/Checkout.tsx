@@ -26,6 +26,7 @@ type Produto = {
   preco_original: number | null;
   estoque: number | null;
   esgotado: boolean | null;
+  descricao: string | null;
 };
 
 type CartItem = { produtoId: string; qty: number };
