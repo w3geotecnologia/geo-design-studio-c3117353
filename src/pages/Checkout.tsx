@@ -298,110 +298,113 @@ const Checkout = () => {
                     return (
                       <div
                         key={item.produtoId}
-                        className="flex flex-col sm:flex-row gap-4 pb-6 border-b last:border-b-0 last:pb-0"
+                        className="pb-6 border-b last:border-b-0 last:pb-0"
                       >
-                        <div className="w-full sm:w-56 h-56 bg-white rounded-lg border overflow-hidden flex items-center justify-center shrink-0">
-                          {p.imagem_url ? (
-                            <img
-                              src={p.imagem_url}
-                              alt={p.nome ?? ""}
-                              className="w-full h-full object-contain"
-                            />
-                          ) : (
-                            <span className="text-xs text-muted-foreground">Sem imagem</span>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0 flex flex-col">
-                          <h3 className="font-semibold text-foreground">{p.nome}</h3>
-                          {p.preco_original != null &&
-                            p.preco != null &&
-                            p.preco_original > p.preco && (
-                              <span className="text-xs text-muted-foreground line-through block mt-1">
-                                {formatBRL(p.preco_original)}
-                              </span>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                          <div className="w-full sm:w-56 h-56 bg-white rounded-lg border overflow-hidden flex items-center justify-center shrink-0">
+                            {p.imagem_url ? (
+                              <img
+                                src={p.imagem_url}
+                                alt={p.nome ?? ""}
+                                className="w-full h-full object-contain"
+                              />
+                            ) : (
+                              <span className="text-xs text-muted-foreground">Sem imagem</span>
                             )}
-                          <p className="text-xl font-bold text-primary mt-1">
-                            {p.preco != null ? formatBRL(p.preco) : "Sob consulta"}
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {max > 0 ? `${max} em estoque` : "Sem estoque"}
-                          </p>
+                          </div>
+                          <div className="flex-1 min-w-0 flex flex-col">
+                            <h3 className="font-semibold text-foreground">{p.nome}</h3>
+                            {p.preco_original != null &&
+                              p.preco != null &&
+                              p.preco_original > p.preco && (
+                                <span className="text-xs text-muted-foreground line-through block mt-1">
+                                  {formatBRL(p.preco_original)}
+                                </span>
+                              )}
+                            <p className="text-xl font-bold text-primary mt-1">
+                              {p.preco != null ? formatBRL(p.preco) : "Sob consulta"}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {max > 0 ? `${max} em estoque` : "Sem estoque"}
+                            </p>
 
-                          <div className="flex items-center gap-3 mt-3">
-                            <div className="flex items-center border rounded-md">
+                            <div className="flex items-center gap-3 mt-3">
+                              <div className="flex items-center border rounded-md">
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  onClick={() => updateQty(item.produtoId, -1)}
+                                  disabled={item.qty <= 1}
+                                >
+                                  <Minus className="w-4 h-4" />
+                                </Button>
+                                <span className="w-10 text-center text-sm font-semibold">
+                                  {item.qty}
+                                </span>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  onClick={() => updateQty(item.produtoId, 1)}
+                                  disabled={item.qty >= max}
+                                >
+                                  <Plus className="w-4 h-4" />
+                                </Button>
+                              </div>
                               <Button
                                 type="button"
                                 variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                                onClick={() => updateQty(item.produtoId, -1)}
-                                disabled={item.qty <= 1}
+                                size="sm"
+                                onClick={() => removeItem(item.produtoId)}
+                                className="text-destructive hover:text-destructive"
                               >
-                                <Minus className="w-4 h-4" />
-                              </Button>
-                              <span className="w-10 text-center text-sm font-semibold">
-                                {item.qty}
-                              </span>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                                onClick={() => updateQty(item.produtoId, 1)}
-                                disabled={item.qty >= max}
-                              >
-                                <Plus className="w-4 h-4" />
+                                <Trash2 className="w-4 h-4 mr-1" />
+                                Remover
                               </Button>
                             </div>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => removeItem(item.produtoId)}
-                              className="text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="w-4 h-4 mr-1" />
-                              Remover
-                            </Button>
-                          </div>
 
-                          <p className="text-sm text-muted-foreground mt-2">
-                            Subtotal:{" "}
-                            <strong className="text-foreground">
-                              {formatBRL((p.preco ?? 0) * item.qty)}
-                            </strong>
-                          </p>
+                            <p className="text-sm text-muted-foreground mt-2">
+                              Subtotal:{" "}
+                              <strong className="text-foreground">
+                                {formatBRL((p.preco ?? 0) * item.qty)}
+                              </strong>
+                            </p>
+                            <a
+                              href={`#desc-${item.produtoId}`}
+                              className="text-sm text-primary hover:underline mt-1 self-start"
+                            >
+                              Ver descrição completa →
+                            </a>
+                          </div>
+                        </div>
+
+                        <div
+                          id={`desc-${item.produtoId}`}
+                          className="mt-4 bg-muted/30 rounded-lg p-4 scroll-mt-24"
+                        >
+                          <h4 className="font-heading font-semibold text-sm text-foreground mb-2">
+                            Descrição completa
+                          </h4>
+                          {p.descricao ? (
+                            <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                              {p.descricao}
+                            </p>
+                          ) : (
+                            <p className="text-sm text-muted-foreground italic">
+                              Sem descrição disponível para este produto.
+                            </p>
+                          )}
                         </div>
                       </div>
                     );
                   })}
                 </div>
               </div>
-
-              <div className="bg-card rounded-xl shadow-sm p-6">
-                <h2 className="font-heading font-semibold text-lg mb-4">Frete (opcional)</h2>
-                <div className="flex flex-col sm:flex-row gap-3 sm:items-end">
-                  <div className="flex-1">
-                    <Label htmlFor="cep">CEP de entrega</Label>
-                    <Input
-                      id="cep"
-                      value={cep}
-                      onChange={(e) => setCep(e.target.value)}
-                      placeholder="00000-000"
-                      maxLength={9}
-                    />
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={calcularFrete}
-                    disabled={calculandoFrete}
-                  >
-                    {calculandoFrete ? "Calculando..." : "Calcular Frete"}
-                  </Button>
-                </div>
-              </div>
             </div>
+
 
             {/* Resumo */}
             <div className="lg:col-span-1">
