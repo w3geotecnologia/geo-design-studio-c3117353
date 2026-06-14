@@ -2,6 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { supabase } from "@/lib/supabase";
 import { useProductSearch } from "@/hooks/useProductSearch";
 
@@ -16,6 +22,7 @@ type Produto = {
   esgotado: boolean | null;
   link_externo: string | null;
   estoque: number | null;
+  descricao: string | null;
 };
 
 const formatBRL = (value: number) =>
