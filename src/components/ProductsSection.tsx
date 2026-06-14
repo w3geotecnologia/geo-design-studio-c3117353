@@ -180,8 +180,40 @@ const ProductsSection = () => {
           </div>
         )}
       </div>
+
+      <Dialog open={!!descProduto} onOpenChange={(o) => !o && setDescProduto(null)}>
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{descProduto?.nome ?? "Descrição"}</DialogTitle>
+          </DialogHeader>
+          {descProduto?.imagem_url && (
+            <div className="w-full bg-white rounded-lg border overflow-hidden flex items-center justify-center max-h-72">
+              <img
+                src={descProduto.imagem_url}
+                alt={descProduto.nome ?? ""}
+                className="w-full h-full object-contain max-h-72"
+              />
+            </div>
+          )}
+          <div className="mt-2">
+            <h4 className="font-heading font-semibold text-sm text-foreground mb-2">
+              Descrição completa
+            </h4>
+            {descProduto?.descricao ? (
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                {descProduto.descricao}
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground italic">
+                Sem descrição disponível para este produto.
+              </p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
 
 export default ProductsSection;
+
