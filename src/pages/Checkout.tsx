@@ -441,25 +441,8 @@ const Checkout = () => {
                     <span className="text-muted-foreground">Subtotal</span>
                     <span className="text-foreground">{formatBRL(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between items-center gap-2">
-                    <span className="text-muted-foreground">Frete</span>
-                    <Input
-                      type="text"
-                      inputMode="decimal"
-                      placeholder="0,00"
-                      className="h-8 w-28 text-right"
-                      value={frete === null ? "" : frete.toString().replace(".", ",")}
-                      onChange={(e) => {
-                        const v = e.target.value.replace(/[^\d,.-]/g, "").replace(",", ".");
-                        if (v === "") setFrete(null);
-                        else {
-                          const n = parseFloat(v);
-                          setFrete(isNaN(n) ? null : n);
-                        }
-                      }}
-                    />
-                  </div>
                   <div className="border-t pt-3 mt-3 flex justify-between text-base">
+
                     <span className="font-semibold text-foreground">Total</span>
                     <span className="font-bold text-primary text-lg">{formatBRL(total)}</span>
                   </div>
