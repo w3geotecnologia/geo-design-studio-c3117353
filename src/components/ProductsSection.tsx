@@ -31,13 +31,14 @@ const formatBRL = (value: number) =>
 const ProductsSection = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [descProduto, setDescProduto] = useState<Produto | null>(null);
   const { query, categoria } = useProductSearch();
 
   useEffect(() => {
     (async () => {
       const { data } = await supabase
         .from("produtos")
-        .select("id,nome,categoria,imagem_url,preco_original,preco,esgotado,estoque,link_externo")
+        .select("id,nome,categoria,imagem_url,preco_original,preco,esgotado,estoque,link_externo,descricao")
         .eq("ativo", true)
         .order("nome", { ascending: true });
       setProdutos(data ?? []);
