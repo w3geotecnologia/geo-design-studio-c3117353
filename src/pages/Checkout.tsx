@@ -95,7 +95,7 @@ const Checkout = () => {
       const ids = cart.map((c) => c.produtoId);
       const { data } = await supabase
         .from("produtos")
-        .select("id,nome,imagem_url,preco,preco_original,estoque,esgotado")
+        .select("id,nome,imagem_url,preco,preco_original,estoque,esgotado,descricao")
         .in("id", ids);
       const map: Record<string, Produto> = {};
       (data ?? []).forEach((p: any) => (map[p.id] = p as Produto));
