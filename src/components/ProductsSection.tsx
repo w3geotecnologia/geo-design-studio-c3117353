@@ -161,11 +161,19 @@ const ProductsSection = () => {
                       asChild
                       variant="outline"
                       size="sm"
-                      className="mt-auto border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
                     >
                       {action}
                     </Button>
+                    <button
+                      type="button"
+                      onClick={() => setDescProduto(p)}
+                      className="mt-2 text-xs text-primary hover:underline self-start"
+                    >
+                      Ver descrição completa →
+                    </button>
                   </div>
+
                 </motion.div>
               );
             })}
